@@ -1,12 +1,18 @@
 {
-  "name": "lawyer",
+  "name": "oakstone-legal",
   "version": "1.0.0",
-  "description": "Oakstone Legal Group - Nationwide Law Firm Platform",
-  "main": "index.js",
+  "description": "Oakstone Legal Group - nationwide law firm platform with 26 practice areas, booking, pricing, cyber division and admin panel. Zero dependencies.",
+  "main": "lib/server.js",
   "scripts": {
-    "start": "npx serve public -p 3000"
+    "start": "node lib/server.js",
+    "dev": "node lib/server.js",
+    "assets": "node tools/gen-assets.js",
+    "states": "node tools/gen-states.js",
+    "test": "node tools/test-mailer.js && node tools/validate-content.js"
   },
-  "dependencies": {
-    "serve": "^14.2.4"
-  }
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "UNLICENSED",
+  "private": true
 }
