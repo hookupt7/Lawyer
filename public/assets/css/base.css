@@ -1,55 +1,61 @@
 /* ============================================================
    OAKSTONE LEGAL GROUP — Design System
    Hand-authored. No framework. No utility-soup.
-   Palette deliberately avoids the "AI Purple" default
-   (indigo/violet on near-black) used by every generated site.
+   Modern institutional: deep navy ground, electric blue action,
+   cyan light accent. Cool neutrals throughout.
    ============================================================ */
 
 /* ---------- 1. TOKENS ---------- */
 :root {
-  /* Ink — warm near-black, not blue-black */
-  --ink-900: #0b0d10;
-  --ink-800: #12151a;
-  --ink-700: #1a1f26;
-  --ink-600: #262d36;
-  --ink-500: #3a434f;
-  --ink-400: #5c6673;
-  --ink-300: #8b94a1;
-  --ink-200: #c2c8d0;
+  /* Ink — cool slate scale */
+  --ink-900: #14181f;
+  --ink-800: #1f2530;
+  --ink-700: #333a46;
+  --ink-600: #4a525f;
+  --ink-500: #667080;
+  --ink-400: #949cab;
+  --ink-300: #c6ccd6;
+  --ink-200: #e0e4ea;
+
+  /* Navy — the dark ground. Deep charcoal, almost black. */
+  --navy-950: #0a0c0f;
+  --navy-900: #11151b;
+  --navy-800: #181e27;
+  --navy-700: #232b38;
 
   /* Paper */
-  --bone: #f4f1ea;
-  --paper: #fbfaf7;
+  --bone: #eef0f3;
+  --paper: #f8fafc;
   --white: #ffffff;
 
-  /* Oxblood — the firm's signature. Deep, desaturated, legal. */
-  --ox-700: #47151a;
-  --ox-600: #5c1b21;
-  --ox-500: #6e1f26;
-  --ox-400: #8a2a32;
-  --ox-300: #a8434b;
+  /* Brand blue — muted institutional navy. Serious, not electric. */
+  --ox-700: #142a44;
+  --ox-600: #1c3a5c;
+  --ox-500: #274a70;
+  --ox-400: #3b5f87;
+  --ox-300: #5c7fa3;
 
-  /* Brass — accent. Used sparingly, never as a gradient. */
-  --brass-700: #8a6d3f;
-  --brass-600: #a8854f;
-  --brass-500: #b08d57;
-  --brass-400: #c4a578;
-  --brass-300: #d8c3a0;
+  /* Brass — restrained accent. Antique gold, not neon cyan. */
+  --brass-700: #6b5731;
+  --brass-600: #876f43;
+  --brass-500: #a48c5c;
+  --brass-400: #bda878;
+  --brass-300: #d6c7a4;
 
   /* Signal */
-  --alert: #b23a2e;
-  --ok: #2f6b4f;
+  --alert: #b23a3a;
+  --ok: #4a6b52;
 
   /* Semantic */
   --bg: var(--paper);
   --fg: var(--ink-900);
   --fg-muted: var(--ink-400);
-  --line: #ddd7cb;
-  --line-strong: #c8c0b0;
+  --line: #dfe2e7;
+  --line-strong: #c3c8d0;
 
   /* Type */
-  --serif: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Palatino, Georgia, "Times New Roman", serif;
-  --sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --serif: ui-serif, "New York", "Iowan Old Style", Georgia, Cambria, "Times New Roman", serif;
+  --sans: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --mono: "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
 
   /* Space scale */
@@ -65,15 +71,17 @@
   --dur-slow: 640ms;
 
   /* Layout */
-  --max: 1240px;
+  --max: 1320px;
   --max-narrow: 760px;
-  --radius: 2px;          /* near-square. Rounded corners read as consumer app. */
-  --radius-lg: 3px;
+  --radius: 8px;
+  --radius-lg: 14px;
+  --radius-pill: 999px;
 
-  /* Elevation — almost none. Depth via rules and tone, not drop shadows. */
-  --shadow-sm: 0 1px 2px rgba(11,13,16,0.06);
-  --shadow: 0 2px 8px rgba(11,13,16,0.08);
-  --shadow-lg: 0 12px 40px rgba(11,13,16,0.14);
+  /* Elevation — soft, layered. Modern product surfaces. */
+  --shadow-sm: 0 1px 2px rgba(15,23,42,0.06), 0 1px 3px rgba(15,23,42,0.04);
+  --shadow: 0 4px 12px rgba(15,23,42,0.07), 0 1px 3px rgba(15,23,42,0.05);
+  --shadow-lg: 0 18px 50px rgba(15,23,42,0.16), 0 4px 14px rgba(15,23,42,0.07);
+  --shadow-glow: 0 10px 34px rgba(39,74,112,0.28);
 }
 
 /* ---------- 2. RESET ---------- */
@@ -156,7 +164,7 @@ p { max-width: 68ch; }
 .section--dark { background: var(--ink-900); color: var(--bone); }
 .section--ink { background: var(--ink-800); color: var(--bone); }
 .section--bone { background: var(--bone); }
-.section--rule { border-top: 1px solid var(--line); }
+.section--rule { border-top: 0; }
 
 .grid { display: grid; gap: var(--s5); }
 .g2 { grid-template-columns: repeat(2, 1fr); }
@@ -184,12 +192,12 @@ p { max-width: 68ch; }
 
 /* ---------- 5. RULES & ORNAMENT ---------- */
 .rule { height: 1px; background: var(--line); border: 0; }
-.rule--dark { background: rgba(244,241,234,0.14); }
+.rule--dark { background: rgba(241,245,249,0.14); }
 .rule--short { width: 56px; height: 2px; background: var(--ox-500); border: 0; }
 .rule--brass { background: var(--brass-500); }
 .hairline-grid {
   background-image:
-    linear-gradient(to right, rgba(11,13,16,0.045) 1px, transparent 1px);
+    linear-gradient(to right, rgba(15,23,42,0.045) 1px, transparent 1px);
   background-size: 64px 100%;
 }
 
@@ -214,9 +222,9 @@ p { max-width: 68ch; }
 .btn--brass { background: var(--brass-500); color: var(--ink-900); }
 .btn--brass:hover { background: var(--brass-600); }
 .btn--ghost { background: transparent; color: var(--ink-900); border-color: var(--line-strong); }
-.btn--ghost:hover { border-color: var(--ink-900); background: rgba(11,13,16,0.03); }
-.btn--ghostlight { background: transparent; color: var(--bone); border-color: rgba(244,241,234,0.28); }
-.btn--ghostlight:hover { border-color: var(--bone); background: rgba(244,241,234,0.06); }
+.btn--ghost:hover { border-color: var(--ink-900); background: rgba(15,23,42,0.03); }
+.btn--ghostlight { background: transparent; color: var(--bone); border-color: rgba(241,245,249,0.28); }
+.btn--ghostlight:hover { border-color: var(--bone); background: rgba(241,245,249,0.06); }
 .btn--sm { font-size: 0.8rem; padding: 0.58rem 1.1rem; min-height: 40px; }
 .btn--lg { font-size: 0.94rem; padding: 1rem 2rem; min-height: 54px; }
 .btn--block { width: 100%; }
@@ -243,18 +251,9 @@ p { max-width: 68ch; }
   border-radius: var(--radius);
   color: var(--ink-500);
 }
-.tag--urgent { border-color: var(--alert); color: var(--alert); background: rgba(178,58,46,0.06); }
-.tag--brass { border-color: var(--brass-500); color: var(--brass-700); background: rgba(176,141,87,0.08); }
-.tag--dark { border-color: rgba(244,241,234,0.22); color: var(--ink-200); }
-.pulse-dot {
-  width: 7px; height: 7px; border-radius: 50%; background: var(--alert);
-  animation: pulse 2.4s var(--ease-in-out) infinite;
-}
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.35; }
-}
-
+.tag--urgent { border-color: var(--alert); color: var(--alert); background: rgba(220,38,38,0.06); }
+.tag--brass { border-color: var(--brass-500); color: var(--brass-700); background: rgba(164,140,92,0.08); }
+.tag--dark { border-color: rgba(241,245,249,0.22); color: var(--ink-200); }
 /* ---------- 8. CARDS ---------- */
 .card {
   background: var(--white);
@@ -264,7 +263,7 @@ p { max-width: 68ch; }
   transition: border-color var(--dur) var(--ease), transform var(--dur) var(--ease);
 }
 .card--flat { background: transparent; }
-.card--dark { background: var(--ink-800); border-color: rgba(244,241,234,0.1); color: var(--bone); }
+.card--dark { background: var(--ink-800); border-color: rgba(241,245,249,0.1); color: var(--bone); }
 .card--link:hover { border-color: var(--ink-900); transform: translateY(-2px); }
 .card--accent { border-left: 2px solid var(--ox-500); }
 
@@ -286,7 +285,7 @@ p { max-width: 68ch; }
 /* ---------- 9. HEADER ---------- */
 .header {
   position: sticky; top: 0; z-index: 90;
-  background: rgba(251,250,247,0.92);
+  background: rgba(248,250,252,0.92);
   backdrop-filter: saturate(180%) blur(14px);
   -webkit-backdrop-filter: saturate(180%) blur(14px);
   border-bottom: 1px solid var(--line);
@@ -318,7 +317,7 @@ p { max-width: 68ch; }
   border-radius: var(--radius);
   transition: color var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease);
 }
-.nav__link:hover, .nav__item.is-open > .nav__link { color: var(--ink-900); background: rgba(11,13,16,0.04); }
+.nav__link:hover, .nav__item.is-open > .nav__link { color: var(--ink-900); background: rgba(15,23,42,0.04); }
 .nav__chev { width: 9px; height: 9px; transition: transform var(--dur) var(--ease); }
 .nav__item.is-open .nav__chev { transform: rotate(180deg); }
 
