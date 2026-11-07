@@ -1,0 +1,12 @@
+{
+  "name": "lawyer",
+  "version": "1.0.0",
+  "description": "Oakstone Legal Group - Nationwide Law Firm Platform",
+  "main": "index.js",
+  "scripts": {
+    "start": "npx serve public -p 3000"
+  },
+  "dependencies": {
+    "serve": "^14.2.4"
+  }
+}
