@@ -19,7 +19,7 @@ Serves on `http://localhost:3000` (override with `PORT`).
 | Variable | Purpose |
 |---|---|
 | `PORT` | Listen port (default 3000) |
-| `ADMIN_PASS` | Admin panel password (default `oakstone-admin` — change before deploy) |
+| `ADMIN_PASS` | Admin panel password (default `OANKS123456789` — change before deploy) |
 | `SMTP_HOST` / `SMTP_PORT` | Mail relay. Unset = mail is skipped, not lost |
 | `SMTP_USER` / `SMTP_PASS` | SMTP credentials (AUTH LOGIN over STARTTLS or implicit TLS) |
 | `SMTP_FROM` | Envelope sender (defaults to the public intake email) |
@@ -29,7 +29,13 @@ Serves on `http://localhost:3000` (override with `PORT`).
 `/admin` — session cookie auth (HttpOnly, 8-hour TTL). Manage firm contact
 details, social URLs, bookable time slots, announcement bar, lead status
 (new / contacted / consulted / retained / declined / closed), CSV export of
-every inquiry with IP and user agent, and a tamper-evident audit log.
+every inquiry with IP and user agent, a one-click full JSON backup, a
+"send test email" button, and a tamper-evident audit log.
+
+Where enquiries land: every form submission is written to
+`data/runtime/*.json` and appears immediately in the admin table. Email
+delivery is a second channel on top of that — it only starts once the five
+`SMTP_*` variables are set. Nothing is lost while mail is unconfigured.
 
 ## Email behaviour
 
