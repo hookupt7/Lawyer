@@ -693,3 +693,7 @@ textarea.field { resize: vertical; min-height: 92px; line-height: 1.55; }
   background: linear-gradient(to right, var(--ox-500), var(--brass-500));
   vertical-align: middle; margin-right: 0.7rem;
 }
+/* office list inside the contact card */
+.office { padding: .6rem 0; border-top: 1px solid var(--line); display: flex; flex-direction: column; gap: .15rem; }
+.office:first-child { border-top: 0; }
+.office strong { font-size: .95rem; }

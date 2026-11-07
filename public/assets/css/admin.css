@@ -1,0 +1,130 @@
+/* ============================================================
+   Oakstone — admin editor styles
+   Loaded only by the admin pages. Extends components.css.
+   ============================================================ */
+
+.admin__wrap--single { max-width: 1100px; margin: 0 auto; padding: clamp(1rem, 3vw, 2rem) clamp(1rem, 3vw, 2rem) 4rem; }
+
+.admin__main .panel { margin-top: 1.5rem; }
+.admin__main--single { width: 100%; }
+
+/* ---- table add-ons ---- */
+
+.tbl-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+.tbl__group td {
+  background: rgba(241, 245, 249, .05);
+  font-size: .72rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--muted, #8a94a6);
+  padding: .5rem .8rem;
+  font-weight: 600;
+}
+
+tbl.tbl td, .tbl td { vertical-align: middle; }
+.tbl .right { text-align: right; white-space: nowrap; }
+.tbl .field { width: 100%; }
+.tbl tbody tr:hover { background: rgba(255, 255, 255, .02); }
+
+/* ---- tags ---- */
+
+.tag--edit { background: rgba(176, 141, 87, .18); color: #d8c08a; border-color: rgba(176, 141, 87, .4); }
+.tag--ok { background: rgba(37, 99, 66, .22); color: #7fd1a4; border-color: rgba(37, 99, 66, .5); }
+.tag--warn { background: rgba(160, 82, 45, .2); color: #e8a87c; border-color: rgba(160, 82, 45, .45); }
+.tag--dark { background: rgba(241, 245, 249, .12); color: var(--bone, #f1f5f9); }
+
+/* ---- notices ---- */
+
+.notice {
+  padding: .85rem 1rem;
+  border-radius: 6px;
+  border: 1px solid var(--line, rgba(255, 255, 255, .12));
+  font-size: .9rem;
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+.notice--ok { background: rgba(37, 99, 66, .16); border-color: rgba(37, 99, 66, .45); color: #9fe0bb; }
+.notice--warn { background: rgba(160, 82, 45, .16); border-color: rgba(160, 82, 45, .45); color: #eeb894; }
+.notice strong { color: #fff; }
+
+/* ---- attorney list cell ---- */
+
+.att-cell { display: flex; align-items: center; gap: .7rem; }
+.att-thumb {
+  width: 42px; height: 42px; object-fit: cover; border-radius: 50%;
+  border: 1px solid var(--line, rgba(255, 255, 255, .15));
+  flex-shrink: 0; background: rgba(255, 255, 255, .05);
+}
+
+/* ---- image upload widget ---- */
+
+.upload { display: flex; gap: 1rem; align-items: flex-start; flex-wrap: wrap; }
+.upload__img {
+  width: 108px; height: 108px; object-fit: cover; border-radius: 8px;
+  border: 1px solid var(--line, rgba(255, 255, 255, .15)); flex-shrink: 0;
+}
+.upload__empty {
+  width: 108px; height: 108px; border-radius: 8px; flex-shrink: 0;
+  border: 1px dashed var(--line, rgba(255, 255, 255, .22));
+  display: flex; align-items: center; justify-content: center;
+  font-size: .72rem; color: var(--muted, #8a94a6);
+}
+.upload__body { flex: 1 1 260px; min-width: 220px; }
+.upload__body input[type="file"] {
+  width: 100%; padding: .5rem .6rem; font-size: .85rem;
+  border: 1px solid var(--line, rgba(255, 255, 255, .15));
+  border-radius: 6px; background: rgba(255, 255, 255, .04); color: inherit;
+}
+.upload__body input[type="file"]::file-selector-button {
+  background: rgba(255, 255, 255, .1); color: inherit; border: 0;
+  padding: .35rem .7rem; border-radius: 4px; margin-right: .6rem; cursor: pointer;
+}
+
+/* ---- switch ---- */
+
+.switch { display: inline-flex; align-items: center; gap: .55rem; cursor: pointer; text-transform: none; letter-spacing: 0; font-size: .9rem; }
+.switch input { width: 1.05rem; height: 1.05rem; accent-color: var(--brass, #b08d57); }
+.switch span { color: inherit; }
+
+/* ---- form layout ---- */
+
+.form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 0 1.1rem; }
+.form-grid .form-row.full { grid-column: 1 / -1; }
+.form-row { margin-bottom: 1rem; }
+.form-row label { display: block; font-size: .74rem; letter-spacing: .08em; text-transform: uppercase; margin-bottom: .35rem; color: var(--muted, #8a94a6); }
+.form-row .field,
+.form-row textarea.field {
+  width: 100%; padding: .6rem .7rem; font-size: .92rem;
+  border: 1px solid var(--line, rgba(255, 255, 255, .15));
+  border-radius: 6px; background: rgba(255, 255, 255, .04); color: inherit;
+  font-family: inherit;
+}
+.form-row textarea.field { resize: vertical; line-height: 1.55; }
+.form-row .field:focus { outline: 2px solid var(--brass, #b08d57); outline-offset: 1px; }
+.form-row .tiny { display: block; margin-top: .3rem; }
+
+/* admin panels sit on the dark shell, keep text readable */
+.admin .panel { background: rgba(255, 255, 255, .025); border: 1px solid var(--line, rgba(255, 255, 255, .1)); border-radius: 10px; overflow: hidden; }
+.admin .panel__h {
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+  flex-wrap: wrap; padding: .9rem 1.1rem;
+  border-bottom: 1px solid var(--line, rgba(255, 255, 255, .1));
+}
+.admin .panel__h h2 { font-size: 1rem; margin: 0; letter-spacing: .02em; }
+.admin .panel__b { padding: 1.1rem; }
+.admin .panel__b + .panel__b { padding-top: 0; }
+
+.tiny { font-size: .76rem; line-height: 1.5; }
+.muted { color: var(--muted, #8a94a6); }
+.ox { color: #e8a87c; }
+.mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+.mt2 { margin-top: .4rem; }
+.mt3 { margin-top: .6rem; }
+.mt4 { margin-top: .9rem; }
+.row { display: flex; align-items: center; flex-wrap: wrap; }
+
+@media (max-width: 700px) {
+  .upload { flex-direction: column; }
+  .admin .panel__h { flex-direction: column; align-items: flex-start; }
+}
