@@ -489,4 +489,124 @@
       a.setAttribute('data-clicked', '1');
     });
   });
+
+  /* ---------- INLINE BOOKING (sub-pages book in place) ---------- */
+  (function inlineBook() {
+    var root = $('#ibook');
+    if (!root) return;
+    var form = $('#ibook-form', root);
+    var formBox = $('.ibook__form', root);
+    var doneBox = $('.ibook__done', root);
+    var err = $('#ibook-err', root);
+    var send = $('#ibook-send', root);
+    var ctxEl = $('#ibook-ctx', root);
+    var lastFocus = null;
+
+    function open(rootEl) {
+      lastFocus = document.activeElement;
+      var area = rootEl.getAttribute('data-area') || '';
+      var att = rootEl.getAttribute('data-attorney') || '';
+      var svc = rootEl.getAttribute('data-service') || '';
+      var ctx = rootEl.getAttribute('data-context') || '';
+      $('#ib-area', root).value = area;
+      $('#ib-service', root).value = svc;
+      $('#ib-context', root).value = ctx;
+      var sel = $('#ib-area-select', root);
+      if (area) { sel.value = area; } else if (!sel.value) { sel.value = ''; }
+      var attSel = $('#ib-attorney', root);
+      if (att) attSel.value = att;
+      if (ctx) { ctxEl.textContent = ctx; }
+      err.textContent = '';
+      root.hidden = false;
+      document.documentElement.style.overflow = 'hidden';
+      var first = $('#ib-name', root);
+      if (first) setTimeout(function () { first.focus({ preventScroll: true }); }, 60);
+    }
+    function close() {
+      root.hidden = true;
+      document.documentElement.style.overflow = '';
+      if (lastFocus && lastFocus.focus) lastFocus.focus({ preventScroll: true });
+    }
+
+    $$('[data-ibook]').forEach(function (trig) {
+      trig.addEventListener('click', function (e) {
+        if (e.metaKey || e.ctrlKey || e.shiftKey || e.button === 1) return; // honour "open in new tab"
+        e.preventDefault();
+        open(trig);
+      });
+    });
+    $$('[data-ibook-close]', root).forEach(function (b) { b.addEventListener('click', close); });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && !root.hidden) close();
+    });
+    /* keep the hidden area id in step with the dropdown */
+    var sel = $('#ib-area-select', root);
+    if (sel) sel.addEventListener('change', function () { $('#ib-area', root).value = sel.value; });
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      err.textContent = '';
+      var name = $('#ib-name', root).value.trim();
+      var phone = $('#ib-phone', root).value.trim();
+      var email = $('#ib-email', root).value.trim();
+      if (!name) { err.textContent = 'Please add your name.'; return; }
+      if (phone.replace(/\D/g, '').length < 10) { err.textContent = 'A reachable phone number is required.'; return; }
+      if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { err.textContent = 'A valid email is required for the confirmation.'; return; }
+      root.classList.add('is-busy');
+      if (send) send.textContent = 'Sending...';
+      fetch('/api/book-inline', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: name, phone: phone, email: email,
+          area: $('#ib-area', root).value,
+          attorney: $('#ib-attorney', root).value,
+          service: $('#ib-service', root).value,
+          context: $('#ib-context', root).value,
+          state: $('#ib-state', root).value,
+          date: $('#ib-day', root).value,
+          time: $('#ib-time', root).value,
+          details: $('#ib-details', root).value
+        })
+      }).then(function (r) { return r.json(); }).then(function (data) {
+        root.classList.remove('is-busy');
+        if (!data || !data.ok) {
+          err.textContent = (data && data.error) || 'Something went wrong. Please call us instead.';
+          if (send) send.textContent = 'Request my consultation';
+          return;
+        }
+        formBox.hidden = true;
+        doneBox.hidden = false;
+        var who = data.attorney && data.attorney.indexOf('No preference') === -1
+          ? data.attorney : 'An attorney';
+        $('#ibook-done-msg').innerHTML =
+          '<strong>' + who + '</strong> will get in touch with you soon. A confirmation is on its way to ' +
+          String(data.email || email).replace(/[<>]/g, '') + ', and your request is already in the firm\u2019s intake queue.';
+        $('#ibook-done-ref').textContent = data.ref ? 'Reference ' + data.ref : '';
+        if (data.when) $('#ibook-done-ref').textContent += (data.when ? ' \u00b7 requested ' + data.when : '');
+      }).catch(function () {
+        root.classList.remove('is-busy');
+        if (send) send.textContent = 'Request my consultation';
+        err.textContent = 'We could not reach the server. Please call us instead.';
+      });
+    });
+  })();
+
+  /* ---------- RATING PICKER (attorney profiles) ---------- */
+  (function ratingPick() {
+    $$('.ratingbox__pick').forEach(function (pick) {
+      var val = 0;
+      var buttons = $$('button', pick);
+      var input = $('#' + pick.getAttribute('data-for'));
+      function paint(n) {
+        buttons.forEach(function (b, i) { b.classList.toggle('is-on', i < n); });
+      }
+      buttons.forEach(function (b, i) {
+        b.addEventListener('click', function () { val = i + 1; paint(val); if (input) input.value = val; });
+        b.addEventListener('mouseenter', function () { paint(i + 1); });
+      });
+      pick.addEventListener('mouseleave', function () { paint(val); });
+    });
+  })();
+
 })();
