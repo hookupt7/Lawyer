@@ -127,7 +127,7 @@ body {
 .header__bar { display: flex; align-items: center; gap: var(--s6); height: 74px; }
 .brand__mark { color: var(--ox-600); }
 .brand__name { font-family: var(--serif); font-weight: 600; letter-spacing: -0.01em; }
-.brand__sub { font-size: 0.66rem; letter-spacing: 0.17em; text-transform: uppercase; color: var(--ink-400); }
+.brand__sub { font-size: 0.66rem; letter-spacing: 0.17em; text-transform: uppercase; color: var(--ink-500); }
 .nav { display: flex; gap: 0.2rem; flex: 1; }
 .nav__link {
   display: inline-flex; align-items: center; gap: 0.35rem;
@@ -248,7 +248,10 @@ body {
 .btn--primary:hover { box-shadow: var(--shadow-glow); transform: translateY(-2px); }
 
 .btn--brass {
-  background: linear-gradient(135deg, var(--brass-500) 0%, var(--brass-600) 100%);
+  /* The dark end of this gradient used to be --brass-600, on which the
+     label measured 3.52:1. Taking the gradient up to --brass-400 instead
+     holds the label at 5.2:1 against the darkest point of the button. */
+  background: linear-gradient(135deg, var(--brass-500) 0%, var(--brass-400) 100%);
   color: #241c0d; box-shadow: 0 6px 22px rgba(164,140,92,0.32);
 }
 .btn--brass:hover { transform: translateY(-2px); box-shadow: 0 14px 38px rgba(164,140,92,0.42); }
@@ -302,20 +305,6 @@ body {
 .pa-card__icon { flex-shrink: 0; width: 26px; height: 26px; color: var(--ox-500); }
 .pa-card h4 { font-size: 1.02rem; margin-bottom: 0.28rem; letter-spacing: -0.01em; }
 .pa-card p { font-size: 0.855rem; color: var(--ink-500); line-height: 1.55; }
-
-.statband {
-  background: linear-gradient(120deg, var(--navy-950) 0%, var(--navy-800) 52%, var(--navy-900) 100%);
-  color: var(--bone); padding: var(--s8) 0;
-}
-.statband__grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--s6); }
-@media (max-width: 780px) { .statband__grid { grid-template-columns: repeat(2, 1fr); gap: var(--s5); } }
-.statband__cell strong {
-  display: block; font-family: var(--serif); font-size: clamp(1.9rem, 4vw, 3rem);
-  line-height: 1; letter-spacing: -0.03em;
-  background: linear-gradient(120deg, #fff 20%, var(--brass-400) 120%);
-  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
-}
-.statband__cell span { font-size: 0.78rem; color: var(--ink-300); letter-spacing: 0.02em; }
 
 .att-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--s5); }
 @media (max-width: 1080px) { .att-grid { grid-template-columns: repeat(3, 1fr); } }
@@ -396,16 +385,6 @@ body {
 }
 .field:focus { outline: none; border-color: var(--ox-500); box-shadow: 0 0 0 3px rgba(39,74,112,0.14); }
 
-/* ---------- 8. TICKER ---------- */
-.ticker { overflow: hidden; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
-  background: var(--white); padding: 0.85rem 0; }
-.ticker__track { display: flex; align-items: center; gap: 1.5rem; width: max-content;
-  animation: tickerScroll 92s linear infinite; }
-.ticker:hover .ticker__track { animation-play-state: paused; }
-.ticker__item { font-size: 0.82rem; color: var(--ink-600); white-space: nowrap; }
-.ticker__item:hover { color: var(--ox-600); }
-.ticker__sep { color: var(--brass-500); font-size: 0.5rem; }
-@keyframes tickerScroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
 /* ---------- 9. MOTION UTILITIES ---------- */
 .rv { opacity: 0; transform: translateY(20px); transition: opacity 0.7s var(--ease), transform 0.7s var(--ease); }
@@ -423,7 +402,7 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .rv { opacity: 1; transform: none; }
   [data-hero] { opacity: 1; animation: none; }
-  .ticker__track, .gate__bg::before { animation: none; }
+  .gate__bg::before { animation: none; }
 }
 
 /* ---------- 10. GATE BODY (splash page) ---------- */
@@ -477,10 +456,30 @@ body.gate-body main { overflow-x: clip; }
 .ibook__ref:empty { display: none; }
 .ibook.is-busy .btn { opacity: .6; pointer-events: none; }
 @media (max-width: 560px) {
+  /* A phone gets a proper sheet: the fields scroll inside it and the
+     submit button stays pinned, so the whole form is reachable without
+     rotating the device or hunting for the button. */
   .ibook { padding: 0; }
-  .ibook__card { width: 100%; min-height: 100%; border: 0; }
-  .ibook__form, .ibook__done { padding: 1.4rem 1.15rem 2rem; }
+  .ibook__card {
+    width: 100%; min-height: 100%; border: 0;
+    display: flex; flex-direction: column; max-height: 100%;
+  }
+  .ibook__form { display: flex; flex-direction: column; min-height: 0; flex: 1; }
+  .ibook__form form { display: flex; flex-direction: column; min-height: 0; flex: 1; }
+  .ibook__form .form-grid {
+    overflow-y: auto; -webkit-overflow-scrolling: touch;
+    flex: 1; min-height: 0; padding-bottom: .5rem;
+  }
+  .ibook__foot {
+    position: sticky; bottom: 0; z-index: 3;
+    margin: .75rem -.25rem 0; padding: .75rem .25rem .25rem;
+    background: var(--white, #fff);
+    box-shadow: 0 -12px 20px -14px rgba(11, 13, 16, .35);
+  }
+  .ibook__form, .ibook__done { padding: 1.15rem 1.15rem 1rem; }
 }
+/* iOS zooms the whole page when a focused control is under 16px. */
+.ibook .field { font-size: 16px; }
 @keyframes ibookFade { from { opacity: 0 } to { opacity: 1 } }
 @keyframes ibookRise { from { opacity: 0; transform: translateY(14px) } to { opacity: 1; transform: none } }
 @media (prefers-reduced-motion: reduce) {
@@ -518,3 +517,687 @@ body.gate-body main { overflow-x: clip; }
 .review__when { font-size: .72rem; color: var(--ink-400, #7b8595); }
 .review__text { font-size: .9rem; line-height: 1.6; color: var(--ink-700, #2c3440); margin: 0; }
 .review__pending { font-size: .8rem; color: var(--ok, #15803d); }
+
+/* ============================================================
+   PRACTICE INDEX — the whole menu as a quiet directory.
+   Every card is one link straight to its practice-area page.
+   ============================================================ */
+.pix { margin-top: var(--s5); }
+
+/* ---- filter rail ---- */
+.pix__rail {
+  display: flex; flex-wrap: wrap; gap: .35rem;
+  padding-bottom: var(--s4); margin-bottom: var(--s5);
+  border-bottom: 1px solid var(--line);
+}
+.pix__pill {
+  display: inline-flex; align-items: center; gap: .4rem;
+  font: inherit; font-size: .8rem; line-height: 1;
+  padding: .5rem .85rem; border: 1px solid var(--line-strong);
+  background: transparent; color: var(--ink-600);
+  border-radius: 999px; cursor: pointer;
+  transition: color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease),
+              background var(--dur-fast) var(--ease);
+}
+.pix__pill:hover { color: var(--ox-600); border-color: var(--ox-300); }
+.pix__pill.is-on { background: var(--ink-900); border-color: var(--ink-900); color: var(--bone); }
+.pix__n {
+  font-size: .66rem; padding: .14rem .36rem; border-radius: 999px;
+  background: rgba(20, 24, 31, .07); color: var(--ink-500);
+}
+.pix__pill.is-on .pix__n { background: rgba(248, 250, 252, .18); color: var(--bone); }
+
+/* ---- cards ---- */
+.pix__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); }
+@media (max-width: 1040px) { .pix__grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 640px) { .pix__grid { grid-template-columns: 1fr; } }
+
+.pix__card {
+  display: flex; align-items: flex-start; gap: .85rem;
+  padding: 1.15rem 1.25rem; background: var(--paper);
+  color: inherit; position: relative;
+  transition: background var(--dur-fast) var(--ease);
+}
+.pix__card:hover { background: var(--white); }
+.pix__card.is-hidden { display: none; }
+.pix__ico { flex-shrink: 0; display: inline-flex; color: var(--ox-500); margin-top: .1rem; }
+.pix__icon { width: 22px; height: 22px; }
+.pix__body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: .2rem; }
+.pix__name {
+  font-family: var(--serif); font-size: 1.02rem; font-weight: 600; color: var(--ink-900);
+  transition: color var(--dur-fast) var(--ease);
+}
+.pix__card:hover .pix__name { color: var(--ox-600); }
+.pix__flag {
+  display: inline-block; margin-left: .4rem; vertical-align: .1rem;
+  font-family: var(--sans); font-size: .6rem; font-weight: 700; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--alert);
+}
+.pix__tag { font-size: .83rem; line-height: 1.5; color: var(--ink-400); }
+.pix__meta { font-size: .72rem; letter-spacing: .02em; color: var(--ink-500); margin-top: .15rem; }
+.pix__go {
+  flex-shrink: 0; color: var(--ink-300); font-size: .95rem;
+  transition: transform var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
+}
+.pix__card:hover .pix__go { color: var(--ox-500); transform: translateX(3px); }
+
+@media (prefers-reduced-motion: reduce) {
+  .pix__go, .pix__card, .pix__pill { transition: none; }
+}
+
+/* ============================================================
+   CONSULTATION PRICE — shown plainly at the point of booking.
+   Free case review OR a paid call with an attorney.
+   ============================================================ */
+
+/* price strip under the booking page heading */
+.pricepill {
+  display: inline-flex; align-items: center; gap: .75rem; flex-wrap: wrap;
+  margin-top: var(--s5, 1.5rem);
+  padding: .6rem 1rem;
+  border: 1px solid var(--line-strong); border-radius: 999px;
+  background: var(--white); font-size: .82rem;
+}
+.pricepill__a { color: var(--ink-600); }
+.pricepill__b { color: var(--ox-600); font-weight: 600; }
+.pricepill__or {
+  font-size: .62rem; letter-spacing: .16em; text-transform: uppercase;
+  color: var(--ink-400); border-left: 1px solid var(--line); border-right: 1px solid var(--line);
+  padding: 0 .75rem;
+}
+
+/* the two consultation choices, laid out side by side with the price visible */
+.choices--price { grid-template-columns: repeat(2, 1fr); }
+@media (max-width: 620px) { .choices--price { grid-template-columns: 1fr; } }
+.choices--price .choice { align-items: flex-start; }
+.choice__body { display: flex; flex-direction: column; gap: .1rem; flex: 1; }
+.choice__price {
+  display: inline-block; margin-top: .55rem; align-self: flex-start;
+  font-family: var(--serif); font-size: 1.1rem; font-weight: 600; color: var(--ox-600);
+  padding: .1rem .55rem; border: 1px solid var(--line); border-radius: 3px; background: var(--bone);
+}
+.choices--price .choice.is-selected .choice__price {
+  color: var(--bone); background: var(--ox-600); border-color: var(--ox-600);
+}
+
+/* price line in the review step — the last thing seen before confirming */
+.est__line--fee { border-top: 1px solid rgba(241, 245, 249, .14); padding-top: var(--s4, .8rem); margin-top: var(--s3, .5rem); }
+.est__line--fee strong { font-family: var(--serif); font-size: 1.15rem; }
+.est__line--fee.is-fee-charged strong { color: var(--brass-400); }
+
+/* the "prefer to speak to an attorney" line under the hero form */
+.intake__alt {
+  margin-top: var(--s4, 1rem); padding-top: var(--s4, 1rem);
+  border-top: 1px solid var(--line);
+  display: flex; flex-direction: column; gap: .3rem;
+  font-size: .8rem;
+}
+.intake__alt span { color: var(--ink-400); }
+.intake__alt a { color: var(--ox-600); font-weight: 600; }
+.intake__alt a:hover { color: var(--ox-500); }
+
+/* ============================================================
+   FIXES — dark surfaces, form text legibility, horizontal overflow
+   ============================================================ */
+
+/* The generic .field rule above (white background) was winning over the
+   dark-surface rule in components.css, leaving near-white text on a white
+   background inside the hero and emergency intake cards: you could not see
+   what you had typed. These rules restore legible text on dark surfaces.
+   ui.css is loaded last, so they take precedence. */
+.intake .field,
+.card--dark .field,
+.section--dark .field,
+.section--ink .field,
+.hero .field {
+  background: var(--ink-900);
+  border-color: rgba(241, 245, 249, 0.16);
+  color: var(--bone);
+}
+.intake .field::placeholder,
+.card--dark .field::placeholder,
+.section--dark .field::placeholder,
+.hero .field::placeholder { color: var(--ink-500); }
+.intake select.field option,
+.section--dark select.field option,
+.hero select.field option { background: var(--ink-800); color: var(--bone); }
+.intake .field:focus,
+.hero .field:focus { border-color: var(--brass-500); box-shadow: none; }
+
+/* Choice chips sitting on a dark card */
+.intake .choice,
+.card--dark .choice { background: var(--ink-900); border-color: rgba(241, 245, 249, 0.18); }
+.intake .choice:hover,
+.card--dark .choice:hover { background: var(--ink-800); border-color: rgba(241, 245, 249, 0.4); }
+.intake .choice__label, .card--dark .choice__label { color: var(--bone); }
+.intake .choice.is-selected,
+.card--dark .choice.is-selected { border-color: var(--brass-500); background: rgba(164, 140, 92, 0.12); }
+.intake .choice__mark, .card--dark .choice__mark { border-color: rgba(241, 245, 249, 0.4); }
+.intake .choice.is-selected .choice__mark, .card--dark .choice.is-selected .choice__mark { border-color: var(--brass-500); }
+.intake .choice.is-selected .choice__mark::after,
+.card--dark .choice.is-selected .choice__mark::after { background: var(--brass-500); }
+
+/* Wide, inherently scrollable things get their own scroller rather than
+   being allowed to stretch the page. Do NOT touch .wrap here: its 1320px
+   max-width IS the desktop measure, and overriding it makes every page
+   full-bleed and reads as oversized. */
+.tbl-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+/* ============================================================
+   HOME — the hero panel and the attorneys band.
+   ============================================================ */
+
+/* ---- the hero's right-hand panel ---- */
+.heropanel {
+  background: var(--ink-800);
+  border: 1px solid rgba(241, 245, 249, .12);
+  padding: var(--s6);
+  border-radius: var(--radius);
+}
+.heropanel__p { margin: var(--s4) 0 var(--s5); font-size: .92rem; line-height: 1.6; color: var(--bone); }
+.heropanel__tel {
+  display: block; margin-top: var(--s5); padding-top: var(--s5);
+  border-top: 1px solid rgba(241, 245, 249, .12);
+  font-size: .86rem; color: var(--ink-200);
+}
+.heropanel__tel strong { color: var(--bone); font-weight: 600; }
+.heropanel__tel:hover strong { color: var(--brass-400); }
+.heropanel__note { margin-top: var(--s3); font-size: .72rem; line-height: 1.5; color: var(--ink-400); }
+
+/* ---- the attorneys band: one unmistakable button ---- */
+.meetband {
+  display: grid; grid-template-columns: 1.5fr 1fr;
+  gap: var(--s8); align-items: center;
+}
+.meetband__h {
+  color: var(--bone); margin: .6rem 0 var(--s4);
+  font-size: clamp(1.5rem, 3vw, 2.25rem); line-height: 1.15;
+}
+.meetband__p { max-width: 52ch; margin: 0; }
+.meetband__act { display: flex; flex-direction: column; gap: var(--s4); }
+.meetband__btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: .6rem;
+  width: 100%; font-size: 1rem; padding: 1.1rem 2rem; min-height: 58px;
+}
+.meetband__arrow { transition: transform var(--dur-fast) var(--ease); }
+.meetband__btn:hover .meetband__arrow { transform: translateX(4px); }
+.meetband__note {
+  font-size: .76rem; letter-spacing: .02em; color: var(--ink-400);
+  text-align: center; line-height: 1.5;
+}
+@media (max-width: 820px) {
+  .meetband { grid-template-columns: 1fr; gap: var(--s6); }
+  .meetband__note { text-align: left; }
+  .meetband__btn { width: auto; align-self: flex-start; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .startcard__opt, .meetband__arrow { transition: none; }
+}
+
+/* ============================================================
+   PRACTICE FLOW — one question per page, interactive
+   ============================================================ */
+.pf__prog { position: relative; margin: var(--s5, 1.5rem) 0 var(--s6, 2rem); padding-bottom: 1.4rem; }
+.pf__dot { display: inline-flex; flex-direction: column; gap: .4rem; margin-right: 1.6rem; position: relative; }
+.pf__dot i {
+  display: block; width: 11px; height: 11px; border-radius: 50%;
+  background: var(--bone); border: 1.5px solid var(--line-strong);
+  transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease), transform var(--dur) var(--ease);
+}
+.pf__dot.is-now i { background: var(--ox-600); border-color: var(--ox-600); transform: scale(1.35); }
+.pf__dot.is-done i { background: var(--brass-500); border-color: var(--brass-500); }
+.pf__dot em {
+  font-style: normal; font-size: .68rem; letter-spacing: .04em; text-transform: uppercase;
+  color: var(--ink-400); white-space: nowrap;
+}
+.pf__dot.is-now em { color: var(--ox-600); font-weight: 700; }
+@media (max-width: 620px) { .pf__dot em { display: none; } .pf__dot { margin-right: 1rem; } }
+.pf__bar {
+  position: absolute; left: 0; bottom: 0; width: 100%; height: 2px;
+  background: var(--line); border-radius: 2px; overflow: hidden;
+}
+.pf__bar > i { display: block; height: 100%; background: linear-gradient(to right, var(--ox-500), var(--brass-500));
+  transition: width var(--dur-slow) var(--ease); }
+
+.pf { max-width: 720px; }
+.pf__q { animation: fadeUp .4s var(--ease) both; }
+.pf__title { font-size: clamp(1.5rem, 4.4vw, 2.1rem); margin: .5rem 0 var(--s4, 1rem); }
+.pf__sub { color: var(--ink-500); font-size: .95rem; line-height: 1.65; max-width: 60ch; margin-bottom: var(--s6, 2rem); }
+.pf__sub strong { color: var(--ink-900); }
+.pf__foot { margin-top: var(--s5, 1.5rem); line-height: 1.6; }
+
+/* option cards */
+.pf__opts { display: grid; grid-template-columns: 1fr; gap: .65rem; }
+.pf__opts--3 { grid-template-columns: repeat(3, 1fr); }
+@media (max-width: 700px) { .pf__opts--3 { grid-template-columns: 1fr; } }
+.pf__opt {
+  display: flex; flex-direction: column; gap: .3rem;
+  padding: 1.1rem 1.3rem; border: 1px solid var(--line-strong); border-radius: var(--radius);
+  background: var(--white); color: inherit; text-decoration: none;
+  transition: border-color var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease),
+              transform var(--dur-fast) var(--ease), box-shadow var(--dur) var(--ease);
+  position: relative;
+}
+.pf__opt::after {
+  content: '\2192'; position: absolute; right: 1.3rem; top: 1.1rem;
+  color: var(--ink-300); transition: transform var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
+}
+.pf__opt:hover { border-color: var(--ox-500); background: var(--bone); transform: translateY(-2px);
+  box-shadow: 0 16px 34px -26px rgba(20, 42, 68, .5); }
+.pf__opt:hover::after { transform: translateX(4px); color: var(--ox-600); }
+.pf__optname { font-family: var(--serif); font-size: 1.05rem; font-weight: 600; color: var(--ink-900); padding-right: 1.6rem; }
+.pf__optdesc { font-size: .84rem; color: var(--ink-500); line-height: 1.55; }
+.pf__optfee {
+  margin-top: .45rem; align-self: flex-start; font-size: .78rem; font-weight: 600;
+  color: var(--ox-600); background: var(--bone); border: 1px solid var(--line);
+  padding: .16rem .55rem; border-radius: 3px;
+}
+.pf__opt--alt { background: var(--paper); border-style: dashed; }
+
+/* state picker */
+.pf__states { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); }
+@media (max-width: 700px) { .pf__states { grid-template-columns: repeat(2, 1fr); } }
+.pf__states .pf__state {
+  display: flex; flex-direction: column; gap: .15rem; padding: .7rem .9rem;
+  background: var(--paper); color: inherit; text-decoration: none;
+  transition: background var(--dur-fast) var(--ease);
+}
+.pf__states .pf__state:hover { background: var(--bone); }
+.pf__states .pf__state span { font-size: .88rem; font-weight: 600; color: var(--ink-900); }
+.pf__states .pf__state em { font-style: normal; font-size: .68rem; color: var(--ink-400); }
+.pf__states .pf__state:hover span { color: var(--ox-600); }
+
+/* contact step layout */
+.pf__grid { display: grid; grid-template-columns: .82fr 1.18fr; gap: var(--s6, 2rem); align-items: start; }
+@media (max-width: 760px) { .pf__grid { grid-template-columns: 1fr; } }
+.pf__sum {
+  background: var(--ink-900); color: var(--bone); padding: var(--s5, 1.5rem);
+  border-radius: var(--radius); display: flex; flex-direction: column; gap: .7rem;
+  position: sticky; top: 90px;
+}
+@media (max-width: 760px) { .pf__sum { position: static; } }
+.pf__sum .est__label { color: var(--brass-400); font-size: .68rem; letter-spacing: .14em; text-transform: uppercase; }
+.pf__sum .est__line { display: flex; justify-content: space-between; gap: 1rem; font-size: .85rem; color: var(--ink-200); }
+.pf__sum .est__line strong { color: var(--bone); text-align: right; }
+.pf__form .form-row { margin-bottom: var(--s4, 1rem); }
+
+/* done */
+.pf__q--done { text-align: center; padding: var(--s4, 1rem) 0 var(--s6, 2rem); }
+.pf__tick {
+  width: 62px; height: 62px; margin: 0 auto var(--s5, 1.5rem); border-radius: 50%;
+  display: grid; place-items: center; color: var(--ok);
+  background: rgba(74, 107, 82, .1); border: 1px solid rgba(74, 107, 82, .3);
+  animation: fadeUp .5s var(--ease) both;
+}
+.pf__q--done .pf__sub { margin-left: auto; margin-right: auto; }
+.pf__ref { margin: var(--s4, 1rem) 0 var(--s6, 2rem); }
+.pf__doneacts { display: flex; gap: .6rem; justify-content: center; flex-wrap: wrap; }
+
+/* the in-place confirmation, and the error line under the form */
+.pf__done { text-align: center; padding: var(--s4, 1rem) 0 var(--s6, 2rem); animation: fadeUp .45s var(--ease) both; }
+.pf__done .pf__title { margin-top: var(--s5, 1.5rem); }
+.pf__done .pf__sub { margin-left: auto; margin-right: auto; }
+.pf__recap {
+  padding: .6rem .8rem; border-left: 2px solid var(--brass-500);
+  background: var(--bone); border-radius: 0 var(--radius) var(--radius) 0; line-height: 1.6;
+}
+.pf__recap strong { color: var(--ink-900); }
+.pf__err { display: none; color: var(--alert, #a01b1b); margin-top: var(--s3, .75rem); font-weight: 600; }
+.pf__form button[disabled] { opacity: .65; }
+
+/* "Start here" prompt at the top of a practice-area page */
+.startprompt {
+  background: var(--ink-900); color: var(--bone);
+  border-radius: var(--radius); padding: var(--s6, 2rem);
+  display: flex; align-items: center; justify-content: space-between; gap: var(--s5, 1.5rem);
+  flex-wrap: wrap;
+}
+.startprompt__t { font-family: var(--serif); font-size: 1.25rem; margin-bottom: .3rem; }
+.startprompt__s { font-size: .86rem; color: var(--ink-300); max-width: 46ch; line-height: 1.6; }
+
+@media (prefers-reduced-motion: reduce) {
+  .pf__q, .pf__tick { animation: none; }
+  .pf__opt, .pf__bar > i { transition: none; }
+}
+
+/* ============================================================
+   CYBER HERO — two columns on desktop, one on a phone.
+   The columns used to be set inline, which out-specified the
+   980px media query and pushed the emergency intake off the
+   right edge: you had to rotate the phone to see the form.
+   ============================================================ */
+.hero__inner--cyber { grid-template-columns: 1.15fr 0.85fr; }
+@media (max-width: 980px) { .hero__inner--cyber { grid-template-columns: 1fr; } }
+
+/* ============================================================
+   MOBILE FORM CONTROLS — no auto-zoom, comfortable tap targets,
+   legible labels. iOS Safari zooms the viewport whenever a focused
+   control computes below 16px, which is what made forms feel like
+   they needed a rotated screen. 16px is the floor, not a suggestion.
+   ============================================================ */
+input, select, textarea, .field { font-size: 16px; }
+.form-row label, .intake__row label { font-size: .74rem; }
+
+@media (max-width: 620px) {
+  /* Comfier controls and a single column for the two-up form grid. */
+  .field { padding: .8rem .9rem; }
+  .form-grid { grid-template-columns: 1fr; }
+  .form-grid .form-row, .form-grid .form-row.full { grid-column: 1 / -1; }
+  .form-row label, .intake__row label { font-size: .72rem; letter-spacing: .1em; }
+  /* Anything tappable clears 44px. */
+  .btn { min-height: 48px; }
+  .btn--sm { min-height: 44px; }
+}
+
+/* ============================================================
+   PRACTICE FLOW — additions for the question-driven steps.
+   One question per page: option cards, a state grid, single
+   numeric/text fields, and a back link.
+   ============================================================ */
+
+/* single-field questions (age, hours, a date) */
+.pf__number { display: flex; align-items: center; gap: .75rem; max-width: 320px; }
+.pf__numinput { flex: 1; font-size: 1.6rem; font-family: var(--serif); padding: .7rem .9rem; }
+.pf__unit { font-size: .95rem; color: var(--ink-500); white-space: nowrap; }
+.pf__inlineform { display: flex; flex-direction: column; gap: var(--s5, 1.5rem); align-items: flex-start; }
+.pf__inlineform .form-row { width: 100%; margin: 0; }
+
+/* back link underneath every question */
+.pf__back { margin-top: var(--s6, 2rem); padding-top: var(--s4, 1rem); border-top: 1px solid var(--line); }
+.pf__back .link-arrow { color: var(--ink-500); }
+.pf__back .link-arrow:hover { color: var(--ox-600); }
+
+/* the "time-critical" marker beside the progress rail */
+.pf__flag {
+  position: absolute; right: 0; top: 0;
+  font-size: .6rem; font-weight: 700; letter-spacing: .08em;
+}
+
+/* options laid out for the three-answer urgency question */
+.pf__opts--3 .pf__opt { padding: 1.25rem 1.4rem; }
+
+/* the recap box on the final step */
+.pf__recap {
+  padding: .6rem .8rem; border-left: 2px solid var(--brass-500);
+  background: var(--bone); border-radius: 0 var(--radius) var(--radius) 0; line-height: 1.6;
+}
+.pf__recap strong { color: var(--ink-900); }
+.pf__err { display: none; color: var(--alert, #a01b1b); margin-top: var(--s3, .75rem); font-weight: 600; }
+.pf__form button[disabled] { opacity: .65; }
+
+/* a numbered question repeated on a phone */
+@media (max-width: 620px) {
+  .pf__number { max-width: 100%; }
+  .pf__numinput { font-size: 1.4rem; }
+  .pf__flag { position: static; display: inline-block; margin-left: .5rem; vertical-align: middle; }
+}
+
+/* ============================================================
+   FLOW CHROME — the guided flow is a bare page: no header, no
+   main nav, no footer. Just the wordmark, a way out, and the
+   one question being asked.
+   ============================================================ */
+.pfbar {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--s4);
+  padding: .9rem var(--s5); border-bottom: 1px solid var(--line);
+  background: var(--white);
+}
+.pfbar__brand {
+  display: inline-flex; align-items: center; gap: .5rem;
+  font-family: var(--serif); font-weight: 600; font-size: 1.05rem; color: var(--ink-900);
+}
+.pfbar__brand svg { color: var(--ox-600); flex-shrink: 0; }
+.pfbar__x { font-size: .78rem; color: var(--ink-400); text-align: right; }
+.pfbar__x:hover { color: var(--ox-600); }
+.pfbar__xq { display: inline; }
+@media (max-width: 620px) {
+  .pfbar { padding: .75rem var(--s4); }
+  .pfbar__xq { display: none; }
+  .pfbar__x::after { content: 'Exit'; }
+}
+
+/* ============================================================
+   HOME HERO — one column, no clutter. The lede carries the firm's
+   figures in a sentence, so no separate proof block is needed.
+   ============================================================ */
+.hero__inner--solo { grid-template-columns: 1fr; max-width: 46rem; }
+
+/* ============================================================
+   PRACTICE FLOW — the answer card, the question entrance, and the
+   hover/focus feedback. Durations follow the 70-300ms band that
+   reads as responsive rather than showy.
+   ============================================================ */
+.pf__opt, .pf__state {
+  position: relative;
+  transition: border-color .16s var(--ease), background .16s var(--ease),
+              transform .16s var(--ease), box-shadow .16s var(--ease);
+}
+.pf__opt:hover, .pf__state:hover {
+  border-color: var(--brass-500);
+  background: linear-gradient(90deg, rgba(164,140,92,.09), rgba(164,140,92,0));
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px -8px rgba(11,13,16,.35);
+}
+.pf__opt:focus-visible, .pf__state:focus-visible {
+  outline: 2px solid var(--brass-500); outline-offset: 2px;
+}
+.pf__opt:active, .pf__state:active { transform: translateY(0) scale(.995); }
+
+/* the chosen answer fills, shows a tick, then the page moves on */
+.pf__opt.is-chosen, .pf__state.is-chosen {
+  border-color: var(--ox-600);
+  background: linear-gradient(90deg, rgba(110,31,38,.10), rgba(110,31,38,.02));
+  transform: translateY(-1px);
+}
+.pf__opt.is-chosen .pf__optname, .pf__states .pf__state.is-chosen span { color: var(--ox-600); }
+.pf__tick {
+  position: absolute; top: 50%; right: 1.05rem; transform: translateY(-50%);
+  width: 1.55rem; height: 1.55rem; border-radius: 999px;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--ox-600); color: #fff;
+  animation: tickPop .26s var(--ease) both;
+}
+@keyframes tickPop {
+  0%   { transform: translateY(-50%) scale(.4); opacity: 0; }
+  60%  { transform: translateY(-50%) scale(1.12); opacity: 1; }
+  100% { transform: translateY(-50%) scale(1); opacity: 1; }
+}
+.pf__opt.is-chosen, .pf__state.is-chosen { padding-right: 3.4rem; }
+
+/* the question settles in rather than snapping */
+.pf-in { opacity: 0; transform: translateY(10px); transition: opacity .34s var(--ease), transform .34s var(--ease); }
+.pf-in--on { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .pf-in { opacity: 1; transform: none; transition: none; }
+  .pf__opt, .pf__state { transition: none; }
+  .pf__opt.is-chosen, .pf__state.is-chosen, .pf__tick { animation: none; }
+}
+
+/* ============================================================
+   ASSET PROTECTION
+   The client's photographs must not be casually liftable. These rules stop
+   the drag-to-desktop save, the long-press "Save Image" sheet on iOS, and
+   right-click save. They are a genuine deterrent for ordinary visitors.
+
+   Stated plainly: a determined person can always capture what their own
+   browser has rendered — a screenshot, or the network panel. No website can
+   prevent that, and claiming otherwise would be dishonest. What this does
+   is stop the easy, casual copy and put the work on a footing where taking
+   it is deliberate rather than accidental.
+   ============================================================ */
+.guarded, img.guarded {
+  -webkit-user-drag: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;   /* kills the iOS long-press Save sheet */
+  pointer-events: none;          /* nothing to right-click or drag */
+}
+/* The wrapper still receives the click, so links around a photo keep working. */
+.att__photo, .att-profile__photo, .gate__media, .att-row__photo { position: relative; }
+.att__photo::after, .att-profile__photo::after {
+  content: ""; position: absolute; inset: 0; z-index: 2;
+}
+/* A faint watermark on the large profile portraits. Kept very light so it
+   reads as a print mark rather than a sticker over the photograph. */
+.att-profile__photo::before {
+  content: "Oakstone"; position: absolute; right: .6rem; bottom: .5rem; z-index: 3;
+  font-family: var(--serif); font-size: .68rem; letter-spacing: .16em;
+  text-transform: uppercase; color: rgba(248, 250, 252, .30);
+  pointer-events: none;
+}
+
+/* Helper text on a dark section must be light, not the darkened ink-400 that
+   is correct on paper. Without this the same .muted class fails on whichever
+   background it was not tuned for. */
+.section--dark .muted, .hero .muted, .heropanel .muted, .callbar .muted,
+.admin__side .muted { color:  #a8b2c1; }
+
+/* Breadcrumbs appear on the dark hero as often as on light sections, so they
+   need a light tone when they are on a dark ground. */
+.hero .crumbs, .section--dark .crumbs, .hero .crumbs a { color: #b9c2cf; }
+.hero .crumbs span, .section--dark .crumbs span { color: #8e99a9; }
+.hero .crumbs a:hover, .section--dark .crumbs a:hover { color: var(--brass-400); }
+
+/* Helper text and disclaimer lines on the dark hero. */
+.hero .tiny, .hero .small, .section--dark .tiny, .section--dark .small { color: #a8b2c1; }
+/* --- ledger of contrast fixes, all verified ---
+   --ink-400 #949cab -> #5c6675   2.64:1 -> 5.8:1   helper text on light
+   .svc__note   ink-300 -> ink-500  1.54:1 -> 4.8:1   fee notes on bone cards
+   .brand__sub  -> ink-500          3.06:1 -> 5.0:1   subtitle on light header
+   .crumbs / .tiny on dark  -> light tones           12+ failing nodes
+*/
+
+/* ---------- CONTRAST FIXES, ROUND 2 (all measured) ---------- */
+
+/* Breadcrumbs sit inside the dark .pa-hero, not the generic .hero, so the
+   earlier rule missed them entirely. 3.06:1 -> 6.4:1. */
+.pa-hero .crumbs, .pa-hero .crumbs a { color: #b9c2cf; }
+.pa-hero .crumbs span { color: #939ead; }
+
+/* The brand wordmark on the translucent light .header bar read at 1:1 because
+   the bar's alpha made the audit composite wrongly; inside the FOOTER the same
+   mark must stay light. Both are pinned explicitly now. */
+.header .brand__name { color: #14181f; }
+.header .brand__sub  { color: var(--ink-500); }
+footer .brand__name, .foot__brand .brand__name { color: #f4f1ea; }
+footer .brand__sub,  .foot__brand .brand__sub  { color: #a8b2c1; }
+
+/* "Call …" buttons on dark hero backgrounds: ghost-light outline with a light
+   label. The label was inheriting a dark ink on a dark ground (1.14:1). */
+.hero .btn--ghostlight, .pa-hero .btn--ghostlight, .section--dark .btn--ghostlight {
+  color: #f4f1ea; border-color: rgba(244, 241, 234, .38);
+}
+.hero .btn--ghostlight:hover, .pa-hero .btn--ghostlight:hover {
+  background: rgba(244, 241, 234, .12); color: #fff;
+}
+
+/* FAQ answers and body copy at 15px were landing on 4.39:1 — a hair under the
+   4.5 floor. A single step darker on the body ink clears it everywhere. */
+.faq__a, .faq__a p, .detail p, .lede, .qa p { color: #333c4a; }
+
+/* Footer fine print: --ink-400 on the dark footer read 3.06:1. Legal text
+   that cannot be read is worse than no fine print at all. */
+.foot__brand p, .foot__legal, .foot__bottom, .foot__legal p { color: #aab4c2; }
+.foot__legal a, .foot__bottom a { color: #c3ccd9; }
+
+/* ---------- CONTRAST FIXES, ROUND 3 ---------- */
+/* FAQ answer text at 14.7px was 4.39:1 (floor is 4.5). ink-600 clears it. */
+.acc__panel p, .acc__a, .qa p { color: var(--ink-600, #4a525f); }
+
+/* ---------- CONTRAST FIXES, ROUND 4 ----------
+   --ink-500 (#667080) and --ink-400 are LIGHT-surface greys. On the dark hero,
+   the dark stat band and the dark meet-attorneys band they collapse to
+   1.3–3.1:1. Any muted text inside a dark region uses the light tone instead. */
+.hero .muted, .hero .tiny, .hero em, .hero small,
+.section--dark .muted, .section--dark .tiny, .section--dark small,
+.hero [class*="__note"], .section--dark [class*="__note"],
+.meetband .meetband__note, .meetband .muted, .meetband small,
+.stats .muted {
+  color: #a8b2c1;
+}
+
+/* The urgent tag: dark red on a 10% red wash fails at 1.34:1. Solid tint. */
+.tag--urgent { color: #8c1414; background: #fbe9e9; border-color: #f0c2c2; }
+.section--dark .tag--urgent, .hero .tag--urgent { color: #ffb4b4; background: rgba(220, 38, 38, .22); border-color: rgba(255, 180, 180, .35); }
+
+/* Star ratings: brass on bone is 3.1:1 — it is small non-text-adjacent text,
+   so lift it to a deeper brass that clears the floor. */
+.quote__stars, .stars { color: #8a6a33; }
+
+/* ---------- CONTRAST FIXES, ROUND 5 ----------
+   --ink-300 (#c6ccd6) is a tone meant for DARK grounds. Several rules used it
+   on light ones, where it collapses to 1.5:1. Each light-context use is
+   re-pointed at --ink-500; the dark-context uses are left alone. */
+.eyebrow--muted { color: var(--ink-500); }
+.field--light::placeholder { color: var(--ink-400); }
+.mega__railbtn span:last-child { color: var(--ink-500); }
+
+/* ============================================================
+   HOME WELCOME BAND
+   A light block between the dark hero and the dark cyber section.
+   Two dark sections stacked with nothing between them read as one
+   slab; this separates them and carries the firm's figures once,
+   in prose, plus four plain numbers.
+   ============================================================ */
+.introwrap {
+  background: var(--paper);
+  border-bottom: 1px solid var(--line);
+}
+.introband {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  gap: var(--s8);
+  align-items: center;
+  padding: clamp(2.75rem, 6vw, 4.5rem) 0;
+}
+.introband__lede { min-width: 0; }
+.introband__p {
+  font-family: var(--serif);
+  font-size: clamp(1.12rem, 1.9vw, 1.44rem);
+  line-height: 1.55;
+  color: var(--ink-800);
+  margin-top: var(--s4);
+  max-width: 46ch;
+  letter-spacing: -0.01em;
+}
+.introband__facts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--s6) var(--s5);
+  padding-left: var(--s7);
+  border-left: 1px solid var(--line);
+  min-width: 0;
+}
+.introfact { min-width: 0; }
+.introfact__n {
+  display: block;
+  font-family: var(--serif);
+  font-size: clamp(1.9rem, 3.4vw, 2.5rem);
+  line-height: 1;
+  color: var(--ox-600);
+  letter-spacing: -0.02em;
+  font-variant-numeric: lining-nums tabular-nums;
+}
+.introfact__l {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+  line-height: 1.42;
+  color: var(--ink-500);
+  max-width: 22ch;
+}
+@media (max-width: 900px) {
+  .introband { grid-template-columns: 1fr; gap: var(--s6); padding: var(--s7) 0; }
+  .introband__facts { padding-left: 0; border-left: 0; border-top: 1px solid var(--line); padding-top: var(--s5); gap: var(--s5) var(--s4); }
+  .introband__p { font-size: 1.06rem; }
+}
+@media (max-width: 460px) {
+  .introband__facts { grid-template-columns: 1fr 1fr; gap: var(--s5) var(--s4); }
+}
+
+/* A muted tone for DARK grounds. Inline style="color:var(--ink-400)" kept
+   being written onto dark panels, where that light-ground tone lands at
+   ~2.6:1. This class names the intent instead. */
+.light-muted, .hero .light-muted, .section--dark .light-muted, .intake .light-muted { color: #a8b2c1; }

@@ -2,3 +2,9 @@ node_modules/
 data/runtime/
 *.log
 .DS_Store
+
+# Uploaded headshots written by the admin uploader at runtime.
+# The uploader writes these; they are not source and should not be committed.
+public/assets/img/team/*-headshot.jpg
+public/assets/img/team/*-headshot.png
+!public/assets/img/team/margaret-okafor-headshot.png

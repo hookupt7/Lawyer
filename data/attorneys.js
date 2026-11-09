@@ -19,6 +19,7 @@ module.exports = [
     years: 24,
     bio: "Okafor spent seven years as a child-protection attorney for the Illinois Department of Children and Family Services before entering private practice. She handles contested custody and domestic-violence matters and regularly litigates orders of protection under the Illinois Domestic Violence Act. She has tried custody cases in the Cook County Domestic Relations Division and argued termination-of-parental-rights appeals in the Illinois Appellate Court. She trains court-appointed advocates on how survivor safety concerns interact with negotiated parenting plans.",
     email: 'margaret.okafor@oakstonelegal.com',
+    office: 'Washington, DC',
     barNumber: 'IL-6284417',
     featured: true
   },
@@ -35,6 +36,7 @@ module.exports = [
     years: 27,
     bio: "Ruiz-Vargas spent nine years as an Assistant U.S. Attorney in the Eastern District of New York, where he handled organized-crime and wire-fraud prosecutions. He now defends white-collar and federal criminal matters and has argued suppression and sentencing appeals in the Second Circuit. He works frequently with the federal sentencing guidelines, particularly the loss-table calculations that drive fraud exposure, and represents defendants in cooperating-witness agreements. He is a member of the Federal Bar Council.",
     email: 'daniel.ruiz-vargas@oakstonelegal.com',
+    office: 'Washington, DC',
     barNumber: 'NY-2841391',
     featured: false
   },
@@ -51,6 +53,7 @@ module.exports = [
     years: 19,
     bio: "Zhou advises companies and individuals on ransomware response, business-email-compromise losses, and the Computer Fraud and Abuse Act. Before private practice she was a trial attorney in the U.S. Department of Justice Computer Crime and Intellectual Property Section. She coordinates breach notification across state statutes and the SEC disclosure rules, and she has represented clients in cross-border data disputes involving the Hague Evidence Convention. She lectures on chain-of-custody problems in cryptocurrency tracing.",
     email: 'helen.zhou@oakstonelegal.com',
+    office: 'Washington, DC',
     barNumber: 'CA-311864',
     featured: true
   },
@@ -67,6 +70,7 @@ module.exports = [
     years: 31,
     bio: "Whitfield has tried personal-injury and maritime cases for three decades, including Jones Act claims for injured seamen and Longshore and Harbor Workers Compensation Act claims for dockworkers. He handles catastrophic trucking and refinery-injury litigation along the Gulf Coast and works with economists on future-earnings modeling. He served two terms on the Texas Bar Association grievance committee and is a past chair of a local maritime law section. He takes a limited number of cases each year.",
     email: 'samuel.whitfield@oakstonelegal.com',
+    office: 'Washington, DC',
     barNumber: 'TX-24058732',
     featured: true
   },
@@ -83,6 +87,7 @@ module.exports = [
     years: 22,
     bio: "Lindqvist practices estate planning and probate in Minnesota and Wisconsin, with an emphasis on farmland succession and closely held businesses. She drafts revocable trusts, irrevocable life insurance trusts, and grantor-retained annuity trusts, and she handles Minnesota estate tax returns, which reach a lower exemption than the federal estate tax. A large share of her practice involves elder law: Medical Assistance spend-down planning, guardianships, and defense of will contests. She is a fellow of the American College of Trust and Estate Counsel.",
     email: 'theresa.lindqvist@oakstonelegal.com',
+    office: 'Washington, DC',
     barNumber: 'MN-0388154',
     featured: false
   },
@@ -99,6 +104,7 @@ module.exports = [
     years: 20,
     bio: "Nair litigates removal defense and federal immigration cases, including asylum, withholding of removal, and Convention Against Torture claims. She files habeas petitions and mandamus actions when agencies delay unreasonably, and she represents employers on I-9 compliance and PERM labor-certification issues. Earlier in her career she worked as a detention attorney with a nonprofit in Elizabeth, New Jersey. She served a six-year term as an American Immigration Lawyers Association liaison to the Newark immigration court.",
     email: 'priya.nair@oakstonelegal.com',
+    office: 'Washington, DC',
     barNumber: 'NJ-024682011',
     featured: false
   },
@@ -115,6 +121,7 @@ module.exports = [
     years: 15,
     bio: "Whitcomb maintains a Delaware Chancery practice focused on alternative-entity governance, member disputes, and books-and-records actions under Section 220 of the Delaware General Corporation Law. He litigates control contests in limited liability companies and represents founders in buyout disputes. He also handles trade-secret and trademark matters for software firms, including requests for preliminary injunctions. Before law school he worked as a systems engineer, which informs his handling of patent and software-licensing disputes. He writes a widely cited annual summary of Delaware corporate decisions.",
     email: 'james.whitcomb@oakstonelegal.com',
+    office: 'Washington, DC',
     barNumber: 'DE-0061245',
     featured: true
   },
@@ -131,6 +138,7 @@ module.exports = [
     years: 11,
     bio: "Rahman handles family-based immigration and domestic-relations matters that overlap, particularly self-petitions under the Violence Against Women Act and U-visa applications for crime survivors. She represents clients in Maryland and the District of Columbia on custody, divorce, and protective orders, and she coordinates with immigration counsel when a parent faces removal. She previously clerked for a Prince George's County circuit judge. She accepts limited pro bono VAWA cases and is fluent in Bengali and Spanish.",
     email: 'aisha.rahman@oakstonelegal.com',
+    office: 'Washington, DC',
     barNumber: 'MD-0412365',
     featured: false
   },
@@ -147,6 +155,7 @@ module.exports = [
     years: 9,
     bio: "Castellano litigates data-breach and consumer-protection cases, including claims under Massachusetts General Laws Chapter 93A and the federal Fair Credit Reporting Act. He handles incident-response engagements for small and mid-sized companies and drafts state breach notifications. He has experience with the Massachusetts data-security regulation, 201 CMR 17.00, which imposes written information-security program requirements on entities holding residents' personal information. He also defends debt-collection and robocall claims brought under the Telephone Consumer Protection Act.",
     email: 'edward.castellano@oakstonelegal.com',
+    office: 'Washington, DC',
     barNumber: 'MA-645219',
     featured: false
   },
@@ -163,6 +172,7 @@ module.exports = [
     years: 8,
     bio: "Chen represents human-trafficking survivors on T-visa petitions, continued-presence applications, and related civil claims. She has appeared in Los Angeles County Superior Court on vacatur motions under California Penal Code section 236.14, which lets survivors clear convictions that resulted from being trafficked. She works with the California Department of Justice's human-trafficking task forces and coordinates benefits and housing referrals through victim-service agencies. She also handles asylum cases for survivors of gender-based violence.",
     email: 'may.chen@oakstonelegal.com',
+    office: 'Washington, DC',
     barNumber: 'CA-298774',
     featured: true
   },
@@ -179,6 +189,7 @@ module.exports = [
     years: 8,
     bio: "Delacroix handles motor-vehicle and premises-liability litigation along the Front Range, with a focus on Colorado's modified comparative-fault rule, under which a claimant who is more than 50 percent at fault recovers nothing. He also takes dram-shop cases under the Colorado statute that imposes liability on servers who knowingly provide alcohol to visibly intoxicated patrons. He manages the firm's traffic-court practice for CDL holders facing license-suspension consequences. He came to the firm from a plaintiff-side trial firm in Denver.",
     email: 'frank.delacroix@oakstonelegal.com',
+    office: 'Washington, DC',
     barNumber: 'CO-49023',
     featured: false
   },
@@ -195,6 +206,7 @@ module.exports = [
     years: 7,
     bio: "Martinez handles residential and commercial real estate closings, title disputes, and landlord-tenant litigation in South Florida. He works extensively with Florida's homestead protections and the construction-defect pre-suit notice process that Chapter 558 of the Florida Statutes requires before a homeowner sues a builder. He also represents small businesses on entity formation, operating agreements, and contract disputes. He is a member of the Florida Bar's Real Property, Probate and Trust Law Section.",
     email: 'jose.martinez@oakstonelegal.com',
+    office: 'Washington, DC',
     barNumber: 'FL-1127635',
     featured: false
   },
@@ -211,6 +223,7 @@ module.exports = [
     years: 6,
     bio: "Patel represents families in special-education disputes, including due-process complaints under the Individuals with Disabilities Education Act and Section 504 accommodation claims. She also handles insurance-coverage disputes over denied medical benefits and appeals for Medicaid and Children's Special Health Care Services denials in Michigan. She keeps a small civil-rights docket involving police-misconduct and public-accommodation claims. Before joining the firm she represented students through a legal-aid clinic in Detroit.",
     email: 'anika.patel@oakstonelegal.com',
+    office: 'Washington, DC',
     barNumber: 'MI-P74128',
     featured: false
   },
@@ -227,6 +240,7 @@ module.exports = [
     years: 33,
     bio: "Ellison spent fourteen years as an attorney at the U.S. Environmental Protection Agency's Region 10 office before entering private practice. He advises clients on Clean Air Act and Clean Water Act permitting, Superfund matters under CERCLA, and the Oregon toxics program. He is admitted to the U.S. Supreme Court and has briefed environmental appeals in the Ninth Circuit. He now serves the firm as of counsel, focusing on appellate strategy and regulatory comment work rather than trial matters.",
     email: 'robert.ellison@oakstonelegal.com',
+    office: 'Washington, DC',
     barNumber: 'OR-842331',
     featured: false
   }

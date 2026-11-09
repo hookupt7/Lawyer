@@ -139,44 +139,26 @@
     els.forEach(function (e) { io.observe(e); });
   })();
 
-  /* ---------- COUNT UP ---------- */
-  (function counters() {
-    var els = $$('[data-count]');
-    if (!els.length || reduce || !('IntersectionObserver' in window)) return;
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (en) {
-        if (!en.isIntersecting) return;
-        var el = en.target, raw = el.getAttribute('data-count');
-        var num = parseFloat(String(raw).replace(/[^0-9.]/g, '')) || 0;
-        var pre = String(raw).match(/^[^0-9]*/)[0];
-        var suf = String(raw).match(/[^0-9.]*$/)[0];
-        var dec = (String(raw).split('.')[1] || '').length;
-        var t0 = performance.now(), dur = 1100;
-        (function tick(t) {
-          var p = Math.min((t - t0) / dur, 1);
-          var eased = 1 - Math.pow(1 - p, 3);
-          el.textContent = pre + (num * eased).toFixed(dec) + suf;
-          if (p < 1) requestAnimationFrame(tick);
-        })(t0);
-        io.unobserve(el);
-      });
-    }, { threshold: 0.4 });
-    els.forEach(function (e) { io.observe(e); });
-  })();
-
   /* ---------- CHOICE TILES ---------- */
   document.addEventListener('click', function (e) {
     var c = e.target.closest('.choice');
     if (!c) return;
+    /* Chips inside a standalone .choices group are owned by the group picker
+       below, which supports clearing a choice. Without this the delegate
+       re-selected the chip the picker had just cleared — you could never
+       un-select anything. */
+    var grp = c.closest('.choices');
+    if (grp && !grp.closest('#wizard')) return;
     var name = c.getAttribute('data-name');
     if (name) {
       $$('.choice[data-name="' + name + '"]').forEach(function (x) { x.classList.remove('is-selected'); x.setAttribute('aria-pressed', 'false'); });
     }
-    c.classList.add('is-selected');
-    c.setAttribute('aria-pressed', 'true');
+    var wasOn = c.classList.contains('is-selected');
+    c.classList.toggle('is-selected', !wasOn);
+    c.setAttribute('aria-pressed', wasOn ? 'false' : 'true');
     var input = c.querySelector('input');
-    if (input) { input.checked = true; }
-    c.dispatchEvent(new CustomEvent('choice:select', { bubbles: true, detail: { value: c.getAttribute('data-value') } }));
+    if (input) { input.checked = !wasOn; }
+    c.dispatchEvent(new CustomEvent('choice:select', { bubbles: true, detail: { value: wasOn ? '' : c.getAttribute('data-value') } }));
   });
 
   /* ---------- BOOKING WIZARD ---------- */
@@ -246,19 +228,41 @@
       var s = $('#wz-summary');
       if (!s) return;
       var map = {
-        matter: 'Matter type', urgency: 'Urgency', state: 'Jurisdiction',
+        consultType: 'Consultation type', matter: 'Matter type', urgency: 'Urgency', state: 'Jurisdiction',
         attorney: 'Preferred attorney', date: 'Date', time: 'Time',
         fee_type: 'Fee preference', name: 'Full name', email: 'Email',
         phone: 'Phone', details: 'Summary'
       };
+      var typeLabel = { review: 'Free case review', call: 'Consultation call with an attorney' };
       var html = '';
       Object.keys(map).forEach(function (k) {
         if (state.data[k]) {
+          var v = k === 'consultType' ? (typeLabel[state.data[k]] || state.data[k]) : state.data[k];
           html += '<div class="est__line"><span>' + map[k] + '</span><strong>' +
-                  String(state.data[k]).replace(/[<>]/g, '') + '</strong></div>';
+                  String(v).replace(/[<>]/g, '') + '</strong></div>';
         }
       });
       s.innerHTML = html || '<div class="est__detail">No details captured yet.</div>';
+      paintFee();
+    }
+
+    /* Price shown at the point of booking: free review, or the stated call fee. */
+    function paintFee() {
+      var fee = parseInt(w.getAttribute('data-consult-fee'), 10) || 0;
+      var isCall = state.data.consultType === 'call';
+      var val = document.getElementById('wz-fee');
+      var line = document.getElementById('wz-feeline');
+      var terms = document.getElementById('wz-terms');
+      if (val) val.textContent = isCall ? (fee > 0 ? '$' + fee : 'Payable on booking') : 'Free';
+      if (line) line.classList.toggle('is-fee-charged', isCall && fee > 0);
+      if (terms) {
+        terms.innerHTML = isCall
+          ? 'By confirming you agree to a ' + (fee > 0 ? '$' + fee + ' ' : '') + 'consultation call with an attorney. ' +
+            'It is not legal advice, and the attorney-client relationship begins only if we both sign an engagement ' +
+            'agreement afterward. The fee is credited toward your first invoice if you engage the firm.'
+          : 'By confirming you agree to the terms of the case review: it is private, it is not legal advice, ' +
+            'and the attorney-client relationship begins only if we both sign an engagement agreement afterward.';
+      }
     }
 
     $$('.choice', w).forEach(function (c) {
@@ -273,6 +277,7 @@
           var hidden = w.querySelector('input[name="' + f + '"]');
           if (hidden) hidden.value = v;
         }
+        if (f === 'consultType') paintFee();
       });
     });
 
@@ -480,6 +485,74 @@
     });
   })();
 
+  /* ---------- PRACTICE INDEX (main page) ----------
+     Filter the directory by group. Every card is a plain link, so with
+     JavaScript off the whole list is still there and still navigable. */
+  (function practiceIndex() {
+    var root = $('#pix');
+    if (!root) return;
+    var grid = $('.pix__grid', root);
+    var pills = $$('.pix__pill', root);
+    var cards = $$('.pix__card', root);
+
+    pills.forEach(function (p) {
+      p.addEventListener('click', function () {
+        pills.forEach(function (x) { x.classList.remove('is-on'); x.setAttribute('aria-pressed', 'false'); });
+        p.classList.add('is-on');
+        p.setAttribute('aria-pressed', 'true');
+        var g = p.getAttribute('data-pix');
+        cards.forEach(function (c) {
+          c.classList.toggle('is-hidden', g !== 'all' && c.getAttribute('data-group') !== g);
+        });
+      });
+    });
+  })();
+
+  /* ---------- GENERIC CHOICE PICKER (outside the booking wizard) ----------
+     The emergency intake and any other .choices group. Single-choice, and
+     clicking the selected chip again clears the choice — a chip you cannot
+     un-select is a trap. Keeps the hidden input the form posts in sync. */
+  (function choicePickers() {
+    $$('.choices').forEach(function (group) {
+      if (group.closest('#wizard')) return;
+      var chips = $$('.choice', group);
+      if (!chips.length) return;
+      /* The hidden field mirrors the rendered state from the start. If the
+         markup pre-selects a chip, the form must carry that value even when
+         nobody taps anything. */
+      chips.forEach(function (c) {
+        if (c.classList.contains('is-selected')) {
+          var f0 = c.getAttribute('data-field');
+          var h0 = f0 && document.querySelector('input[type="hidden"][name="' + f0 + '"]');
+          if (h0) h0.value = c.getAttribute('data-value');
+        }
+      });
+      chips.forEach(function (c) {
+        c.addEventListener('click', function () {
+          var g = c.getAttribute('data-group') || '';
+          var f = c.getAttribute('data-field');
+          var v = c.getAttribute('data-value');
+          if (!f) return;
+          var wasOn = c.classList.contains('is-selected');
+          var scope = g ? $$('.choice[data-group="' + g + '"]') : chips;
+          scope.forEach(function (x) {
+            x.classList.remove('is-selected');
+            x.setAttribute('aria-pressed', 'false');
+          });
+          var hidden = document.querySelector('input[type="hidden"][name="' + f + '"]');
+          if (wasOn) {
+            /* cleared: the form should not claim a choice the client retracted */
+            if (hidden) hidden.value = '';
+            return;
+          }
+          c.classList.add('is-selected');
+          c.setAttribute('aria-pressed', 'true');
+          if (hidden) hidden.value = v;
+        });
+      });
+    });
+  })();
+
   /* ---------- YEAR / DATE STAMP ---------- */
   $$('[data-year]').forEach(function (e) { e.textContent = new Date().getFullYear(); });
 
@@ -518,15 +591,47 @@
       if (ctx) { ctxEl.textContent = ctx; }
       err.textContent = '';
       root.hidden = false;
-      document.documentElement.style.overflow = 'hidden';
+      lockScroll();
       var first = $('#ib-name', root);
       if (first) setTimeout(function () { first.focus({ preventScroll: true }); }, 60);
     }
     function close() {
       root.hidden = true;
-      document.documentElement.style.overflow = '';
+      unlockScroll();
       if (lastFocus && lastFocus.focus) lastFocus.focus({ preventScroll: true });
     }
+
+    /* iOS Safari ignores `overflow:hidden` on <html>/<body>, so the page behind
+       a modal kept scrolling underneath it — two scrollbars fighting. Pinning
+       the body with a negative offset is what actually holds it still. */
+    var savedY = 0, locked = false;
+    function lockScroll() {
+      if (locked) return;
+      savedY = window.pageYOffset || document.documentElement.scrollTop || 0;
+      var b = document.body;
+      b.style.position = 'fixed';
+      b.style.top = -savedY + 'px';
+      b.style.left = '0';
+      b.style.right = '0';
+      b.style.width = '100%';
+      b.style.overflow = 'hidden';
+      locked = true;
+    }
+    function unlockScroll() {
+      if (!locked) return;
+      var b = document.body;
+      b.style.position = '';
+      b.style.top = '';
+      b.style.left = '';
+      b.style.right = '';
+      b.style.width = '';
+      b.style.overflow = '';
+      window.scrollTo(0, savedY);
+      locked = false;
+    }
+    /* A hidden [hidden] attribute is not enough if a deep link or a re-render
+       left the lock on; release it whenever the modal ends up closed. */
+    window.addEventListener('pageshow', function () { if (root.hidden) unlockScroll(); });
 
     $$('[data-ibook]').forEach(function (trig) {
       trig.addEventListener('click', function (e) {
@@ -606,6 +711,209 @@
         b.addEventListener('mouseenter', function () { paint(i + 1); });
       });
       pick.addEventListener('mouseleave', function () { paint(val); });
+    });
+  })();
+
+  /* ---------- ASSET PROTECTION ----------
+     Stops the casual copy of the firm's photographs: the right-click save,
+     the drag-to-desktop, and the iOS long-press sheet. The CSS does the
+     heavy lifting (pointer-events, -webkit-touch-callout); this catches the
+     keyboard shortcuts and the context menu on the wrappers around them.
+
+     Honest limit: anyone who can see the image in a browser can screenshot
+     it or pull it from the network tab. This deters the ordinary visitor,
+     which is what it is for. It is not a content-protection system. */
+  (function assetGuard() {
+    if (!document.querySelector('.guarded')) return;
+    document.addEventListener('dragstart', function (e) {
+      if (e.target && e.target.closest && e.target.closest('.guarded, .att__photo, .att-profile__photo')) {
+        e.preventDefault();
+      }
+    }, true);
+    document.addEventListener('contextmenu', function (e) {
+      if (e.target && e.target.closest && e.target.closest('.guarded, .att__photo, .att-profile__photo')) {
+        e.preventDefault();
+      }
+    });
+    document.addEventListener('keydown', function (e) {
+      /* Ctrl/Cmd+S (save page) and Ctrl/Cmd+Shift+S are aimed at the assets. */
+      var k = (e.key || '').toLowerCase();
+      if ((e.ctrlKey || e.metaKey) && (k === 's' || k === 'u')) e.preventDefault();
+    });
+  })();
+
+  /* ---------- PRACTICE FLOW: answer feedback ----------
+     Choosing an answer should feel like a decision landing, not a page blink.
+     The chosen card fills, ticks, and the page leaves; a keyboard user gets
+     the same feedback. Motion is skipped when the OS asks for less. */
+  (function flowPicks() {
+    var root = document.querySelector('.pf');
+    if (!root) return;
+    var leaving = false;
+    function go(el, href) {
+      if (leaving) return;
+      leaving = true;
+      el.classList.add('is-chosen');
+      var tick = document.createElement('span');
+      tick.className = 'pf__tick';
+      tick.setAttribute('aria-hidden', 'true');
+      tick.innerHTML = '<svg viewBox="0 0 24 24" width="17" height="17" fill="none" ' +
+        'stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">' +
+        '<path d="M4 12.5l5 5L20 6.5"/></svg>';
+      el.appendChild(tick);
+      var wait = reduce ? 40 : 340;
+      setTimeout(function () { location.href = href; }, wait);
+    }
+    $$('.pf__opt', root).forEach(function (el) {
+      var href = el.getAttribute('href');
+      if (!href) return;
+      el.addEventListener('click', function (e) {
+        if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+        e.preventDefault();
+        go(el, href);
+      });
+    });
+    /* The state picker: same idea, aimed at the state the client tapped. */
+    $$('.pf__state', root).forEach(function (el) {
+      var href = el.getAttribute('href');
+      if (!href) return;
+      el.addEventListener('click', function (e) {
+        if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+        e.preventDefault();
+        go(el, href);
+      });
+    });
+    /* The card fades in when each question arrives, so the page does not
+       simply appear — it settles. */
+    var card = $('.pf__card', root) || $('.pf', root);
+    if (card && !reduce) {
+      card.classList.add('pf-in');
+      requestAnimationFrame(function () { card.classList.add('pf-in--on'); });
+    }
+  })();
+
+  /* ---------- ADMIN: COLLAPSIBLE PANELS ----------
+     A pane holding seven full editors is still a wall of form. Each panel
+     header becomes a toggle so a pane opens as a short list of titles.
+     Without JavaScript nothing is collapsed, so every field stays reachable. */
+  (function adminAccordions() {
+    if (!$('#adminTabs')) return;                 /* only on the dashboard */
+    document.documentElement.classList.add('js-tabs');
+    var panels = $$('.tabpane .panel');
+    panels.forEach(function (p) {
+      var head = $('.panel__h', p);
+      if (!head || !$('h2', head)) return;
+      /* Every panel must have a body to hide. If the markup nests the form
+         differently, wrap what follows the header rather than collapsing
+         the panel down to an empty shell. */
+      if (!$('.panel__b', p)) {
+        var wrap = document.createElement('div');
+        wrap.className = 'panel__b';
+        var sib = head.nextSibling;
+        while (sib) { var nxt = sib.nextSibling; wrap.appendChild(sib); sib = nxt; }
+        p.appendChild(wrap);
+      }
+      head.setAttribute('role', 'button');
+      head.setAttribute('tabindex', '0');
+      head.setAttribute('aria-expanded', 'false');
+      p.classList.add('is-collapsed');
+      function toggle() {
+        var open = !p.classList.contains('is-collapsed');
+        p.classList.toggle('is-collapsed', open);
+        head.setAttribute('aria-expanded', open ? 'false' : 'true');
+      }
+      head.addEventListener('click', function (e) {
+        if (e.target.closest('a, button, input, select, textarea, label')) return;
+        toggle();
+      });
+      head.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
+      });
+    });
+  })();
+
+  /* ---------- ADMIN TABS ----------
+     One pane at a time. Without JavaScript every pane still renders, so the
+     page degrades to the old long scroll rather than hiding anything. */
+  (function adminTabs() {
+    var nav = $('#adminTabs');
+    if (!nav) return;
+    var tabs = $$('.admin__tab', nav);
+    var panes = $$('.tabpane');
+    if (!tabs.length || !panes.length) return;
+    document.documentElement.classList.add('js-tabs');
+
+    function show(name) {
+      tabs.forEach(function (t) { t.classList.toggle('is-on', t.getAttribute('data-pane') === name); });
+      panes.forEach(function (p) { p.classList.toggle('is-on', p.getAttribute('data-pane') === name); });
+      try { history.replaceState(null, '', '#' + name); } catch (e) {}
+      window.scrollTo(0, 0);
+    }
+    tabs.forEach(function (t) {
+      t.addEventListener('click', function () { show(t.getAttribute('data-pane')); });
+    });
+    /* A deep link like /admin#prices opens the pane that owns it. */
+    var hash = (location.hash || '').replace('#', '');
+    if (hash) {
+      var owner = panes.filter(function (p) { return p.getAttribute('data-pane') === hash; })[0];
+      if (!owner) {
+        panes.forEach(function (p) {
+          if (!owner && p.querySelector('#' + hash)) owner = p;
+        });
+      }
+      if (owner) show(owner.getAttribute('data-pane'));
+    }
+    /* Keep nav links inside a pane working (e.g. "Scroll to Inquiries"). */
+    nav.addEventListener('click', function (e) {
+      if (e.target.closest('a')) return;
+    });
+  })();
+
+  /* ---------- PRACTICE FLOW (one question per page) ----------
+     The last step posts to /api/practice-start. With JavaScript we keep the
+     client on the page and show the confirmation in place; without it the
+     server redirects to the same flow with the confirmation showing. */
+  (function practiceFlow() {
+    var form = $('#pf-form');
+    if (!form) return;
+    var done = $('#pf-done');
+    var box = form.closest('.pf__grid');
+    var send = $('#pf-send');
+    var err = $('#pf-err');
+    var refEl = $('#pf-ref');
+
+    function fail(msg) {
+      if (err) { err.textContent = msg; err.style.display = 'block'; }
+      if (send) { send.disabled = false; send.textContent = 'Request my free review'; }
+    }
+
+    form.addEventListener('submit', function (e) {
+      if (!window.fetch || !done) return;           /* let the browser post it */
+      e.preventDefault();
+      if (err) err.textContent = '';
+      var data = {};
+      Array.prototype.forEach.call(form.elements, function (f) {
+        if (f.name) data[f.name] = f.value;
+      });
+      if (!data.name || !data.phone || !data.email) { fail('Name, phone and email are needed.'); return; }
+      if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(data.email)) { fail('That email address does not look right.'); return; }
+      if (String(data.phone).replace(/\D/g, '').length < 10) { fail('A reachable phone number is required.'); return; }
+      if (send) { send.disabled = true; send.textContent = 'Sending\u2026'; }
+      fetch('/api/practice-start', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      }).then(function (r) { return r.json(); }).then(function (j) {
+        if (!j || !j.ok) { fail((j && j.error) || 'Something went wrong. Please call us instead.'); return; }
+        if (refEl) refEl.textContent = j.ref;
+        if (box) box.hidden = true;
+        var prog = document.querySelector('.pf__prog');
+        if (prog) prog.hidden = true;
+        done.hidden = false;
+        done.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'center' });
+      }).catch(function () {
+        fail('We could not reach the server. Please call us instead.');
+      });
     });
   })();
 

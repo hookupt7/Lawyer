@@ -5,7 +5,26 @@
 
 .admin__wrap--single { max-width: 1100px; margin: 0 auto; padding: clamp(1rem, 3vw, 2rem) clamp(1rem, 3vw, 2rem) 4rem; }
 
-.admin__main .panel { margin-top: 1.5rem; }
+/* Admin is used on a phone as often as a laptop. These rules make the
+   shell usable at 393px: the side nav becomes a horizontal strip and every
+   grid/flex child is allowed to shrink. Without `min-width: 0` a grid item
+   refuses to go narrower than its content, and one long row (the nav, a wide
+   table) stretches the whole page sideways. */
+.admin__wrap { min-width: 0; }
+.admin__side, .admin__nav, .admin__main, .admin__main > * { min-width: 0; max-width: 100%; }
+.admin__nav { min-width: 0; }
+
+@media (max-width: 900px) {
+  .admin__wrap { grid-template-columns: minmax(0, 1fr); }
+  .admin__side { min-width: 0; }
+  .admin__nav { overflow-x: auto; min-width: 0; max-width: 100%; }
+  .admin__main { max-width: 100%; overflow-x: hidden; }
+  .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 560px) {
+  .kpis { grid-template-columns: minmax(0, 1fr); }
+  .admin__top { flex-wrap: wrap; gap: .5rem; }
+}
 .admin__main--single { width: 100%; }
 
 /* ---- table add-ons ---- */
@@ -127,4 +146,55 @@ tbl.tbl td, .tbl td { vertical-align: middle; }
 @media (max-width: 700px) {
   .upload { flex-direction: column; }
   .admin .panel__h { flex-direction: column; align-items: flex-start; }
+}
+
+/* ============================================================
+   ADMIN TABS — the dashboard is one pane at a time instead of a
+   42,000-pixel scroll. Easy to find things, easy on a phone.
+   ============================================================ */
+.admin__tab {
+  display: block; width: 100%; text-align: left;
+  font: inherit; font-size: .86rem; color: var(--ink-200);
+  background: none; border: 0; border-left: 2px solid transparent;
+  padding: .62rem var(--s5); cursor: pointer;
+  transition: color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease);
+}
+.admin__tab:hover { color: var(--bone); background: rgba(241, 245, 249, .05); }
+.admin__tab.is-on { color: var(--brass-400); border-left-color: var(--brass-500); background: rgba(164, 140, 92, .09); }
+.admin__badge {
+  display: inline-block; min-width: 1.15rem; text-align: center;
+  background: var(--ox-600); color: #fff; border-radius: 999px;
+  font-size: .62rem; font-weight: 700; padding: .05rem .35rem; margin-left: .4rem;
+}
+/* Panes are hidden only once JavaScript has taken over, so with JS off the
+   whole dashboard still renders as one page and nothing becomes unreachable. */
+html.js-tabs .tabpane { display: none; }
+html.js-tabs .tabpane.is-on { display: block; animation: fadeUp .3s var(--ease) both; }
+.tabpane { display: block; }
+@media (max-width: 900px) {
+  .admin__tab { width: auto; white-space: nowrap; border-left: 0; border-bottom: 2px solid transparent; padding: .62rem .8rem; }
+  .admin__tab.is-on { border-left: 0; border-bottom-color: var(--brass-500); }
+}
+
+/* ============================================================
+   ADMIN — collapsible panels.
+   Scoped to .js-tabs so that with JavaScript off nothing is ever
+   collapsed and every field remains reachable.
+   ============================================================ */
+html.js-tabs .panel.is-collapsed > *:not(.panel__h) { display: none; }
+html.js-tabs .panel .panel__h { cursor: pointer; user-select: none; }
+html.js-tabs .panel .panel__h h2 { display: flex; align-items: center; gap: .55rem; }
+html.js-tabs .panel .panel__h h2::after {
+  content: ''; width: .48rem; height: .48rem; margin-left: .1rem;
+  border-right: 2px solid var(--ink-400); border-bottom: 2px solid var(--ink-400);
+  transform: rotate(45deg) translateY(-1px); transition: transform .18s var(--ease);
+}
+html.js-tabs .panel.is-collapsed .panel__h h2::after { transform: rotate(-45deg) translateX(-1px); }
+html.js-tabs .panel:not(.is-collapsed) .panel__h { border-bottom-color: var(--line); }
+
+/* the new-submissions badge on the Inquiries tab */
+.admin__badge {
+  display: inline-block; min-width: 1.15rem; padding: 0 .3rem;
+  border-radius: 999px; background: var(--ox-600); color: #fff;
+  font-size: .64rem; font-weight: 700; text-align: center; line-height: 1.25rem;
 }

@@ -20,7 +20,7 @@ module.exports = {
   ],
 
   process: [
-    { step: 1, title: 'Confidential review', desc: 'You describe the matter through the intake form or by phone. An attorney, not a salesperson, reads it and identifies the deadline that governs.' },
+    { step: 1, title: 'Tell us what happened', desc: 'You describe the matter through the intake form or by phone. An attorney, not a salesperson, reads it and identifies the deadline that governs.' },
     { step: 2, title: 'Written assessment', desc: 'Within one business day you receive a written scope: the claims or defenses available, the projected timeline, the fee structure and what we need from you.' },
     { step: 3, title: 'Engagement', desc: 'We countersign a fee agreement that states exactly what is included. No work begins and no fee is earned until you have that document in hand.' },
     { step: 4, title: 'Representation', desc: 'A lead attorney and a paralegal are assigned. You get direct numbers for both, a calendar of every deadline, and status updates on a defined schedule.' }

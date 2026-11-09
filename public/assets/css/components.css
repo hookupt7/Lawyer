@@ -115,14 +115,6 @@
 .hero h1 em { font-style: italic; color: var(--brass-400); }
 .hero__lede { color: var(--ink-200); font-size: clamp(1.03rem, 1.5vw, 1.16rem); max-width: 54ch; margin-bottom: var(--s6); }
 .hero__cta { display: flex; gap: var(--s3); flex-wrap: wrap; margin-bottom: var(--s6); }
-.hero__proof {
-  display: flex; gap: var(--s6); flex-wrap: wrap;
-  padding-top: var(--s5); border-top: 1px solid rgba(241,245,249,0.14);
-}
-.hero__proof div strong {
-  display: block; font-family: var(--serif); font-size: 1.5rem; color: var(--brass-400); line-height: 1.1;
-}
-.hero__proof div span { font-size: 0.74rem; color: var(--ink-300); letter-spacing: 0.03em; }
 
 /* Quick intake card */
 .intake {
@@ -132,7 +124,7 @@
   border-radius: var(--radius);
 }
 .intake__title { font-family: var(--serif); font-size: 1.28rem; color: var(--bone); margin-bottom: 0.35rem; }
-.intake__sub { font-size: 0.82rem; color: var(--ink-300); margin-bottom: var(--s5); }
+.intake__sub { font-size: 0.82rem; color: #a8b2c1; margin-bottom: var(--s5); }
 .intake__row { margin-bottom: var(--s4); }
 .intake__row label {
   display: block; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.13em;
@@ -172,18 +164,6 @@ textarea.field { resize: vertical; min-height: 92px; line-height: 1.55; }
   .mega__list { grid-template-columns: 1fr; }
 }
 
-/* ---------- STAT BAND ---------- */
-.statband { border-top: 0; border-bottom: 0; background: var(--bone); }
-.statband__grid { display: grid; grid-template-columns: repeat(4, 1fr); }
-.statband__cell { padding: var(--s6) var(--s5); border-right: 1px solid var(--line); }
-.statband__cell:last-child { border-right: 0; }
-.statband__cell strong {
-  display: block; font-family: var(--serif); font-size: clamp(1.75rem, 3.4vw, 2.6rem);
-  line-height: 1; color: var(--ox-500); margin-bottom: 0.5rem; letter-spacing: -0.02em;
-}
-.statband__cell span { font-size: 0.79rem; color: var(--ink-400); line-height: 1.45; display: block; max-width: 26ch; }
-@media (max-width: 860px) { .statband__grid { grid-template-columns: repeat(2, 1fr); } .statband__cell:nth-child(2) { border-right: 0; } .statband__cell:nth-child(-n+2) { border-bottom: 1px solid var(--line); } }
-@media (max-width: 480px) { .statband__grid { grid-template-columns: 1fr; } .statband__cell { border-right: 0; border-bottom: 1px solid var(--line); } }
 
 /* ---------- PRACTICE GRID ---------- */
 .pa-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); }
@@ -202,7 +182,7 @@ textarea.field { resize: vertical; min-height: 92px; line-height: 1.55; }
 /* Service list — a priced table, not a card loop */
 .svc { border-top: 1px solid var(--line); }
 .svc__row {
-  display: grid; grid-template-columns: 1fr 210px 130px;
+  display: grid; grid-template-columns: minmax(0, 1fr) 180px;
   gap: var(--s5); align-items: start;
   padding: var(--s5) 0; border-bottom: 1px solid var(--line);
   transition: background var(--dur-fast) var(--ease);
@@ -211,7 +191,7 @@ textarea.field { resize: vertical; min-height: 92px; line-height: 1.55; }
 .svc__name { font-family: var(--sans); font-size: 1rem; font-weight: 650; color: var(--ink-900); margin-bottom: 0.3rem; }
 .svc__desc { font-size: 0.865rem; color: var(--ink-400); line-height: 1.55; max-width: 62ch; }
 .svc__fee { font-family: var(--serif); font-size: 1.08rem; color: var(--ox-500); font-weight: 600; white-space: nowrap; }
-.svc__note { display: block; font-family: var(--sans); font-size: 0.71rem; color: var(--ink-300); margin-top: 0.22rem; white-space: normal; font-weight: 400; }
+.svc__note { display: block; font-family: var(--sans); font-size: 0.72rem; color: var(--ink-600); margin-top: 0.22rem; white-space: normal; font-weight: 400; }
 .svc__fee small { display: block; font-family: var(--sans); font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-400); font-weight: 700; margin-bottom: 0.15rem; }
 @media (max-width: 780px) {
   .svc__row { grid-template-columns: 1fr; gap: var(--s3); }
@@ -247,7 +227,7 @@ textarea.field { resize: vertical; min-height: 92px; line-height: 1.55; }
 .acc__item.is-open .acc__icon::before { background: var(--ox-500); }
 .acc__item.is-open .acc__btn { color: var(--ox-500); }
 .acc__panel { max-height: 0; overflow: hidden; transition: max-height var(--dur-slow) var(--ease); }
-.acc__panel p { padding: 0 0 1.3rem; font-size: 0.92rem; color: var(--ink-500); line-height: 1.68; max-width: 82ch; }
+.acc__panel p { padding: 0 0 1.3rem; font-size: 0.92rem; color: var(--ink-600); line-height: 1.68; max-width: 82ch; }
 
 /* ---------- PROCESS STEPS ---------- */
 .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border-top: 1px solid var(--line); }
@@ -293,7 +273,7 @@ textarea.field { resize: vertical; min-height: 92px; line-height: 1.55; }
 .wizard__tab {
   flex: 1; padding: 0.9rem 0.5rem; text-align: center;
   font-size: 0.7rem; font-weight: 700; letter-spacing: 0.11em; text-transform: uppercase;
-  color: var(--ink-300); border-bottom: 2px solid transparent;
+  color: var(--ink-400); border-bottom: 2px solid transparent;
   transition: color var(--dur) var(--ease), border-color var(--dur) var(--ease);
 }
 .wizard__tab.is-active { color: var(--ox-500); border-bottom-color: var(--ox-500); background: var(--white); }
@@ -462,21 +442,15 @@ textarea.field { resize: vertical; min-height: 92px; line-height: 1.55; }
 .rv-d4 { transition-delay: 320ms; } .rv-d5 { transition-delay: 400ms; } .rv-d6 { transition-delay: 480ms; }
 @media (prefers-reduced-motion: reduce) { .rv { opacity: 1; transform: none; } }
 
-/* ---------- FLOATING CALL BAR (mobile) ---------- */
-.callbar {
-  position: fixed; left: 0; right: 0; bottom: 0; z-index: 88;
-  display: none; background: var(--ink-900); border-top: 1px solid rgba(241,245,249,0.14);
-  padding: 0.55rem var(--s4) calc(0.55rem + env(safe-area-inset-bottom));
-  gap: var(--s3);
-}
-.callbar a { flex: 1; }
-@media (max-width: 760px) { .callbar { display: flex; } body { padding-bottom: 66px; } }
+/* The floating call bar was removed — it covered page content on phones.
+   Nothing pins to the bottom of the viewport now. */
+@media (max-width: 760px) { body { padding-bottom: 0; } }
 
 /* ---------- PAGE HEADER ---------- */
 .pagehead { background: var(--bone); border-bottom: 1px solid var(--line); padding: clamp(2rem, 5vw, 3.5rem) 0; }
 .crumbs { display: flex; align-items: center; gap: 0.5rem; font-size: 0.76rem; color: var(--ink-400); margin-bottom: var(--s4); flex-wrap: wrap; }
 .crumbs a:hover { color: var(--ox-500); }
-.crumbs span { color: var(--ink-300); }
+.crumbs span { color: var(--ink-600); }   /* ink-300 gave 1.41:1 on bone, ink-500 4.39:1; ink-600 clears it at 6.9:1 */
 
 /* ---------- TABLES (admin + pricing matrix) ---------- */
 .tbl { font-size: 0.855rem; border: 1px solid var(--line); background: var(--white); }
@@ -499,7 +473,7 @@ textarea.field { resize: vertical; min-height: 92px; line-height: 1.55; }
 }
 .admin__top .brand__name, .admin__top .brand__sub { color: var(--bone); }
 .admin__top .brand__sub { color: var(--brass-400); }
-.admin__wrap { display: grid; grid-template-columns: 216px 1fr; gap: 0; align-items: start; }
+.admin__wrap { display: grid; grid-template-columns: 216px minmax(0, 1fr); gap: 0; align-items: start; }
 .admin__side { background: var(--ink-800); min-height: calc(100vh - 60px); padding: var(--s4) 0; position: sticky; top: 60px; }
 .admin__nav a {
   display: block; padding: 0.62rem var(--s5); font-size: 0.85rem; color: var(--ink-200);
@@ -520,7 +494,7 @@ textarea.field { resize: vertical; min-height: 92px; line-height: 1.55; }
 .panel__h { padding: var(--s4) var(--s5); border-bottom: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between; gap: var(--s4); flex-wrap: wrap; }
 .panel__h h2 { font-family: var(--sans); font-size: 0.95rem; font-weight: 650; }
 .panel__b { padding: var(--s5); }
-@media (max-width: 900px) { .admin__wrap { grid-template-columns: 1fr; } .admin__side { position: static; min-height: 0; } .admin__nav { display: flex; overflow-x: auto; } .admin__nav a { white-space: nowrap; border-left: 0; border-bottom: 2px solid transparent; } .admin__nav a.is-active { border-left: 0; border-bottom-color: var(--brass-500); } .kpis { grid-template-columns: repeat(2, 1fr); } .admin__main { padding: var(--s5) var(--s4) var(--s8); } }
+@media (max-width: 900px) { .admin__wrap { grid-template-columns: minmax(0, 1fr); } .admin__side { position: static; min-height: 0; } .admin__nav { display: flex; overflow-x: auto; } .admin__nav a { white-space: nowrap; border-left: 0; border-bottom: 2px solid transparent; } .admin__nav a.is-active { border-left: 0; border-bottom-color: var(--brass-500); } .kpis { grid-template-columns: repeat(2, 1fr); } .admin__main { padding: var(--s5) var(--s4) var(--s8); max-width: 100%; overflow-x: hidden; } .admin__side, .admin__nav { min-width: 0; max-width: 100%; } }
 
 /* Login card */
 .login { min-height: 100vh; display: grid; place-items: center; background: var(--ink-900); padding: var(--s5); }
@@ -550,34 +524,6 @@ textarea.field { resize: vertical; min-height: 92px; line-height: 1.55; }
   .hero [data-hero] { animation: none; }
 }
 
-/* ---------- PRACTICE TICKER ---------- */
-.ticker {
-  background: var(--ink-900);
-  border-top: 0;
-  overflow: hidden;
-  position: relative;
-}
-.ticker__track {
-  display: flex;
-  align-items: center;
-  width: max-content;
-  animation: ticker 70s linear infinite;
-}
-.ticker:hover .ticker__track { animation-play-state: paused; }
-.ticker__item {
-  display: inline-flex; align-items: center;
-  padding: 0.78rem 1.05rem;
-  font-size: 0.8rem; font-weight: 550; color: var(--ink-300);
-  white-space: nowrap;
-  transition: color var(--dur-fast) var(--ease);
-}
-.ticker__item:hover { color: var(--brass-400); }
-.ticker__sep { color: var(--ox-400); font-size: 0.7rem; user-select: none; }
-@keyframes ticker {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
-}
-@media (prefers-reduced-motion: reduce) { .ticker__track { animation: none; } }
 
 /* ---------- SCROLL PROGRESS ---------- */
 .progress {
@@ -643,14 +589,26 @@ textarea.field { resize: vertical; min-height: 92px; line-height: 1.55; }
 .rot { position: relative; }
 .rot__slide { display: none; }
 .rot__slide.is-on { display: block; animation: fadeUp 0.55s var(--ease) both; }
-.rot__dots { display: flex; gap: 0.55rem; justify-content: center; margin-top: var(--s5); }
+.rot__dots { display: flex; gap: 0.15rem; justify-content: center; margin-top: var(--s4); }
+/* The dot reads as 9px, but the button around it is a full-size tap target:
+   a 9px hit area fails on any touch device. The visual sits in ::after so
+   the padding can grow without the dot growing with it. Inactive dots use
+   --ink-500, since --line-strong was only 1.6:1 as a state indicator. */
 .rot__dot {
-  width: 9px; height: 9px; border-radius: 50%;
-  background: var(--line-strong);
+  position: relative;
+  width: 44px; height: 44px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: none; border: 0; padding: 0; cursor: pointer;
+  transition: transform var(--dur-fast) var(--ease);
+}
+.rot__dot::after {
+  content: ""; width: 9px; height: 9px; border-radius: 50%;
+  background: var(--ink-500);
   transition: background var(--dur-fast) var(--ease), transform var(--dur-fast) var(--ease);
 }
-.rot__dot:hover { background: var(--ink-400); }
-.rot__dot.is-on { background: var(--ox-500); transform: scale(1.3); }
+.rot__dot:hover::after { background: var(--ink-700); }
+.rot__dot:focus-visible { outline: 2px solid var(--ox-500); outline-offset: -8px; border-radius: 8px; }
+.rot__dot.is-on::after { background: var(--ox-500); transform: scale(1.35); }
 
 /* ---------- FILTER TABS (practice hub) ---------- */
 .filters {

@@ -13,7 +13,7 @@
   --ink-700: #333a46;
   --ink-600: #4a525f;
   --ink-500: #667080;
-  --ink-400: #949cab;
+  --ink-400: #5c6675;   /* was #949cab (2.64:1) — now 5.9:1 on bone/white */
   --ink-300: #c6ccd6;
   --ink-200: #e0e4ea;
 
@@ -219,7 +219,7 @@ p { max-width: 68ch; }
 .btn--primary:hover { background: var(--ox-600); }
 .btn--ink { background: var(--ink-900); color: var(--bone); }
 .btn--ink:hover { background: var(--ink-700); }
-.btn--brass { background: var(--brass-500); color: var(--ink-900); }
+.btn--brass { background: var(--brass-500); color: #241c0d; }
 .btn--brass:hover { background: var(--brass-600); }
 .btn--ghost { background: transparent; color: var(--ink-900); border-color: var(--line-strong); }
 .btn--ghost:hover { border-color: var(--ink-900); background: rgba(15,23,42,0.03); }
